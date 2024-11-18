@@ -9,14 +9,14 @@ import { Option } from './option.directive';
   standalone: true,
   host: {
     role: 'listbox',
-    '[attr.tabindex]': 'composable.tabindex()',
-    '[attr.aria-orientation]': 'composable.orientation()',
-    '[attr.aria-multiselectable]': 'composable.multiselectable()',
-    '[attr.aria-activedescendant]': 'composable.activedescendant()',
-    '(focusin)': 'composable.load()',
-    '(mouseenter)': 'composable.load()',
-    '(keydown)': 'composable.onKeyDown($event)',
-    '(pointerdown)': 'composable.onPointerDown($event)',
+    '[attr.tabindex]': 'state.tabindex()',
+    '[attr.aria-orientation]': 'state.orientation()',
+    '[attr.aria-multiselectable]': 'state.multiselectable()',
+    '[attr.aria-activedescendant]': 'state.activedescendant()',
+    '(focusin)': 'state.load()',
+    '(mouseenter)': 'state.load()',
+    '(keydown)': 'state.onKeyDown($event)',
+    '(pointerdown)': 'state.onPointerDown($event)',
   },
 })
 export class Listbox {
@@ -41,10 +41,11 @@ export class Listbox {
 
   children = contentChildren(Option);
   items = computed(() => this.children().map((c) => c.composable));
+  orientation = computed(() => (this.vertical() ? 'vertical' : 'horizontal'));
 
-  composable: ListboxState<OptionState>;
+  state: ListboxState<OptionState>;
 
   constructor() {
-    this.composable = new ListboxState(this);
+    this.state = new ListboxState(this);
   }
 }

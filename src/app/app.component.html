@@ -21,16 +21,16 @@
       </li>
       }
     </ul>
-    @if (listbox.composable.typeaheadState.query()) {
+    @if (listbox.state.typeaheadState.query()) {
     <span class="typeahead">{{
-      listbox.composable.typeaheadState.query() | titlecase
+      listbox.state.typeaheadState.query() | titlecase
     }}</span>
     }
   </div>
 
   <div class="hud">
     <div>
-      <span>Typeahead: {{ listbox.composable.typeaheadState.query() }}</span>
+      <span>Typeahead: {{ listbox.state.typeaheadState.query() }}</span>
     </div>
     <div>
       <label for="wrap-input">Wrap: </label>

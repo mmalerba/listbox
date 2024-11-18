@@ -1,8 +1,23 @@
-import { OptionState } from "../option/option";
-import { ListboxState } from "./listbox";
+import { computed } from '@angular/core';
+import { ListNavigationController } from '../navigation/list-navigation-controller';
+import { OptionState } from '../option/option';
+import { ListboxState } from './listbox';
 
 export class ListboxController<T extends OptionState> {
-  constructor(readonly state: ListboxState<T>) {}
+  private navigationController: ListNavigationController<T>;
+
+  private previousKey = computed(() =>
+    this.state.orientation() === 'vertical' ? 'ArrowUp' : 'ArrowLeft'
+  );
+  private nextKey = computed(() =>
+    this.state.orientation() === 'vertical' ? 'ArrowDown' : 'ArrowRight'
+  );
+
+  constructor(readonly state: ListboxState<T>) {
+    this.navigationController = new ListNavigationController(
+      state.navigationState
+    );
+  }
 
   onKeyDown(event: KeyboardEvent) {
     this.handleNavigation(event);
@@ -14,21 +29,18 @@ export class ListboxController<T extends OptionState> {
   }
 
   handleNavigation(event: KeyboardEvent) {
-    const upOrLeft = this.state.vertical() ? 'ArrowUp' : 'ArrowLeft';
-    const downOrRight = this.state.vertical() ? 'ArrowDown' : 'ArrowRight';
-
     switch (event.key) {
-      case downOrRight:
-        this.state.navigationState.navigateNext();
+      case this.nextKey():
+        this.navigationController.navigateNext();
         break;
-      case upOrLeft:
-        this.state.navigationState.navigatePrev();
+      case this.previousKey():
+        this.navigationController.navigatePrev();
         break;
       case 'Home':
-        this.state.navigationState.navigateFirst();
+        this.navigationController.navigateFirst();
         break;
       case 'End':
-        this.state.navigationState.navigateLast();
+        this.navigationController.navigateLast();
         break;
     }
 
@@ -47,9 +59,6 @@ export class ListboxController<T extends OptionState> {
   }
 
   handleMultiSelection(event: KeyboardEvent) {
-    const upOrLeft = this.state.vertical() ? 'ArrowUp' : 'ArrowLeft';
-    const downOrRight = this.state.vertical() ? 'ArrowDown' : 'ArrowRight';
-
     if (event.ctrlKey) {
       if (event.key === 'a') {
         this.state.selectionState.toggleAll();
@@ -68,7 +77,10 @@ export class ListboxController<T extends OptionState> {
       if (event.key === ' ') {
         this.state.selectionState.selectFromAnchor();
         return;
-      } else if (event.key === downOrRight || event.key === upOrLeft) {
+      } else if (
+        event.key === this.nextKey() ||
+        event.key === this.previousKey()
+      ) {
         this.state.selectionState.toggle();
         return;
       }
@@ -87,7 +99,7 @@ export class ListboxController<T extends OptionState> {
         const index = this.state.navigationState
           .items()
           .findIndex((i) => i.id() === li.id);
-        this.state.navigationState.navigateTo(index);
+        this.navigationController.navigateTo(index);
         this.state.selectionState.multiselectable()
           ? this.state.selectionState.toggle()
           : this.state.selectionState.select();

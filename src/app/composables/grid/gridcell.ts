@@ -1,8 +1,8 @@
 import { computed, Signal, WritableSignal } from '@angular/core';
-import { WidgetState } from './widget';
-import { GridState, RowCol } from './grid';
-import { NavigationState } from '../navigation/navigation';
 import { FocusState } from '../focus/focus';
+import { ListNavigationState } from '../navigation/list-navigation-state';
+import { GridState, RowCol } from './grid';
+import { WidgetState } from './widget';
 
 export interface GridCellInputs {
   grid: GridState;
@@ -26,7 +26,7 @@ export class GridCellState {
   widgetIndex: WritableSignal<number>;
 
   focusState: FocusState<WidgetState>;
-  navigationState: NavigationState<WidgetState>;
+  navigationState: ListNavigationState<WidgetState>;
 
   id = computed(() => `gridcell-${counter++}`);
   index = computed(() => getIndex(this.grid.cells(), this.id()));
@@ -34,7 +34,9 @@ export class GridCellState {
   colindex = computed(() => this.index().colindex);
   tabindex = computed(() => (this.focused() ? 0 : -1));
 
-  inWidgetMode = computed(() => this.autofocusWidget() || this.widgetIndex() !== -1);
+  inWidgetMode = computed(
+    () => this.autofocusWidget() || this.widgetIndex() !== -1
+  );
 
   autofocusWidget = computed(() => {
     const widget = this.widgets().at(0);
@@ -81,11 +83,12 @@ export class GridCellState {
       rovingFocus: this.grid.rovingFocus,
     });
 
-    this.navigationState = new NavigationState({
+    this.navigationState = new ListNavigationState({
       ...inputs,
       items: this.widgets,
       currentIndex: this.widgetIndex,
       skipDisabled: this.grid.skipDisabled,
+      orientation: computed(() => 'vertical'), // TODO: support vertical & horizontal.
     });
   }
 
@@ -93,16 +96,16 @@ export class GridCellState {
     this.navigationState.getController();
   }
 
-  navigateNext() {
-    this.navigationState.navigateNext();
+  async navigateNext() {
+    (await this.navigationState.getController()).navigateNext();
   }
 
-  navigatePrev() {
-    this.navigationState.navigatePrev();
+  async navigatePrev() {
+    (await this.navigationState.getController()).navigatePrev();
   }
 
-  navigateTo(index: number) {
-    this.navigationState.navigateTo(index);
+  async navigateTo(index: number) {
+    (await this.navigationState.getController()).navigateTo(index);
   }
 }
 
