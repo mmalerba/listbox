@@ -1,13 +1,13 @@
 import { Directive, effect, ElementRef, inject, model } from '@angular/core';
+import { OptionState } from '../composables/option/option';
 import { Listbox } from './listbox.directive';
-import { OptionState } from '../composables-2/option/option';
 
 @Directive({
   selector: '[option]',
   exportAs: 'option',
   standalone: true,
   host: {
-    'role': 'option',
+    role: 'option',
     '[attr.id]': 'composable.id()',
     '[attr.tabindex]': 'composable.tabindex()',
     '[attr.aria-setsize]': 'composable.setsize()',
@@ -16,7 +16,7 @@ import { OptionState } from '../composables-2/option/option';
     '[attr.aria-disabled]': 'composable.disabled()',
     '[class.active]': 'composable.active()',
     '[class.focused]': 'composable.focused()',
-  }
+  },
 })
 export class Option {
   searchTerm = model.required<string>();

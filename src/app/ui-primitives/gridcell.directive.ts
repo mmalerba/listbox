@@ -7,9 +7,9 @@ import {
   inject,
   model,
 } from '@angular/core';
-import { GridCellState } from '../composables-2/grid/gridcell';
-import { Widget } from './widget.directive';
+import { GridCellState } from '../composables/grid/gridcell';
 import { Grid } from './grid.directive';
+import { Widget } from './widget.directive';
 
 @Directive({
   selector: '[gridcell]',

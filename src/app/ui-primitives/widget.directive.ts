@@ -1,5 +1,5 @@
 import { Directive, effect, ElementRef, inject, model } from '@angular/core';
-import { WidgetState } from '../composables-2/grid/widget';
+import { WidgetState } from '../composables/grid/widget';
 import { Grid } from './grid.directive';
 import { GridCell } from './gridcell.directive';
 

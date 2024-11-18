@@ -1,14 +1,27 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { StatesService } from './states.service';
-import { Grid } from './ui-primitives-2/grid.directive';
-import { Row } from './ui-primitives-2/row.directive';
-import { GridCell } from './ui-primitives-2/gridcell.directive';
-import { Widget } from './ui-primitives-2/widget.directive';
+import { Grid } from './ui-primitives/grid.directive';
+import { GridCell } from './ui-primitives/gridcell.directive';
+import { Listbox } from './ui-primitives/listbox.directive';
+import { Option } from './ui-primitives/option.directive';
+import { Row } from './ui-primitives/row.directive';
+import { Widget } from './ui-primitives/widget.directive';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [Grid, Row, GridCell, Widget],
+  imports: [
+    Grid,
+    Row,
+    GridCell,
+    Widget,
+    Listbox,
+    Option,
+    FormsModule,
+    TitleCasePipe,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

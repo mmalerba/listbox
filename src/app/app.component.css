@@ -1,4 +1,4 @@
-:host {
+.grid-example {
   display: flex;
   align-items: flex-end;
   justify-content: space-evenly;
@@ -62,4 +62,85 @@ td[aria-disabled="true"] div[widget][aria-disabled="true"] {
 .multi-widget-row {
   display: flex;
   gap: 1rem;
+}
+
+.listbox-example {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 32px;
+}
+
+.listbox-container {
+  position: relative;
+  font-size: 1.5rem;
+  font-family: system-ui;
+  border: 1px solid #888;
+  overflow: hidden;
+}
+
+.typeahead {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  padding: 2px 8px;
+  color: #328bf5;
+  background-color: #ddecfd;
+  border: 2px solid #328bf5;
+  border-top-left-radius: 4px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  list-style-type: none;
+  max-width: 300px;
+  max-height: 400px;
+  overflow-y: scroll;
+  user-select: none;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  outline: none;
+  padding: 16px 32px;
+  border-radius: 2px;
+  border: 2px solid transparent;
+}
+
+li:hover {
+  background-color: #eaeaea;
+}
+
+ul:focus-within li.active,
+ul:focus-within li.focused {
+  border-color: #328bf5;
+}
+
+li[aria-selected="true"] {
+  color: #328bf5;
+  background-color: #ddecfd;
+}
+
+.checkmark {
+  visibility: hidden;
+}
+
+li[aria-selected="true"] .checkmark {
+  visibility: visible;
+}
+
+.hud {
+  max-width: 300px;
+  font-family: system-ui;
+  background-color: #222;
+  color: white;
+  padding: 16px 32px;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }

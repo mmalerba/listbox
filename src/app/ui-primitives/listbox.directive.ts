@@ -1,6 +1,6 @@
 import { computed, contentChildren, Directive, model } from '@angular/core';
-import { ListboxState } from '../composables-2/listbox/listbox';
-import { OptionState } from '../composables-2/option/option';
+import { ListboxState } from '../composables/listbox/listbox';
+import { OptionState } from '../composables/option/option';
 import { Option } from './option.directive';
 
 @Directive({

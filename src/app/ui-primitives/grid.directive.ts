@@ -1,5 +1,5 @@
 import { computed, contentChildren, Directive, model } from '@angular/core';
-import { GridState, RowCol } from '../composables-2/grid/grid';
+import { GridState, RowCol } from '../composables/grid/grid';
 import { Row } from './row.directive';
 
 @Directive({
@@ -23,7 +23,7 @@ export class Grid {
 
   state: GridState;
   rows = contentChildren(Row, { descendants: true });
-  cells = computed(() => this.rows().map(row => row.gridcells()));
+  cells = computed(() => this.rows().map((row) => row.gridcells()));
 
   constructor() {
     this.state = new GridState(this);
