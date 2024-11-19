@@ -1,6 +1,7 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ListboxSelectionMode } from './composables/listbox/listbox.controller';
 import { StatesService } from './states.service';
 import { Grid } from './ui-primitives/grid.directive';
 import { GridCell } from './ui-primitives/gridcell.directive';
@@ -32,11 +33,13 @@ export class AppComponent {
   wrap = true;
   vertical = true;
   rovingFocus = false;
-  followFocus = true;
+  selectionModeStr = signal(`${ListboxSelectionMode.Recommended}`);
+  selectionMode = computed(() => Number(this.selectionModeStr()));
   skipDisabled = true;
-  multiselectable = false;
+  multiselection = false;
   currentIndex = 0;
   typeaheadDelay = 600;
   selectedIndices = [0];
   typeaheadMatcher = /@/;
+  ListboxSelectionMode = ListboxSelectionMode;
 }

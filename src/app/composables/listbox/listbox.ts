@@ -1,17 +1,18 @@
-import { Signal } from '@angular/core';
+import { Signal, WritableSignal } from '@angular/core';
 import { FocusInputs, FocusState } from '../focus/focus-state';
 import {
   ListNavigationInputs,
   ListNavigationState,
 } from '../navigation/list-navigation-state';
 import { OptionState } from '../option/option';
-import { SelectionInputs, SelectionState } from '../selection/selection';
+import { SelectionInputs, SelectionState } from '../selection/selection-state';
 import { TypeAheadInputs, TypeAheadState } from '../typeahead/typeahead';
 import type { Orientation } from '../types';
-import { ListboxController } from './listbox.controller';
+import { ListboxController, ListboxSelectionMode } from './listbox.controller';
 
 export type ListboxInputs<T extends OptionState> = {
   orientation: Signal<Orientation>;
+  selectionMode: Signal<ListboxSelectionMode>;
 } & ListNavigationInputs<T> &
   TypeAheadInputs<T> &
   SelectionInputs<T> &
@@ -24,22 +25,28 @@ export class ListboxState<T extends OptionState> {
   readonly navigationState: ListNavigationState<T>;
 
   readonly tabindex: Signal<number>;
-  readonly multiselectable: Signal<boolean>;
+  readonly multiselection: Signal<boolean>;
   readonly activedescendant: Signal<string | null>;
   readonly orientation: Signal<Orientation>;
+  readonly items: Signal<T[]>;
+  readonly selectionMode: Signal<ListboxSelectionMode>;
+  readonly currentIndex: WritableSignal<number>;
 
   controller: ListboxController<T> | null = null;
 
-  constructor(args: ListboxInputs<T>) {
-    this.focusState = new FocusState(args);
-    this.typeaheadState = new TypeAheadState(args);
-    this.selectionState = new SelectionState(args);
-    this.navigationState = new ListNavigationState(args);
+  constructor(inputs: ListboxInputs<T>) {
+    this.focusState = new FocusState(inputs);
+    this.typeaheadState = new TypeAheadState(inputs);
+    this.selectionState = new SelectionState(inputs);
+    this.navigationState = new ListNavigationState(inputs);
 
-    this.orientation = args.orientation;
+    this.orientation = inputs.orientation;
     this.tabindex = this.focusState.tabindex;
-    this.multiselectable = args.multiselectable;
+    this.multiselection = inputs.multiselection;
     this.activedescendant = this.focusState.activedescendant;
+    this.currentIndex = inputs.currentIndex;
+    this.items = inputs.items;
+    this.selectionMode = inputs.selectionMode;
   }
 
   private async getController() {

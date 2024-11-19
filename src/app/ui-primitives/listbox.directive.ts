@@ -1,5 +1,6 @@
 import { computed, contentChildren, Directive, model } from '@angular/core';
 import { ListboxState } from '../composables/listbox/listbox';
+import { ListboxSelectionMode } from '../composables/listbox/listbox.controller';
 import { OptionState } from '../composables/option/option';
 import { Option } from './option.directive';
 
@@ -11,7 +12,7 @@ import { Option } from './option.directive';
     role: 'listbox',
     '[attr.tabindex]': 'state.tabindex()',
     '[attr.aria-orientation]': 'state.orientation()',
-    '[attr.aria-multiselectable]': 'state.multiselectable()',
+    '[attr.aria-multiselection]': 'state.multiselection()',
     '[attr.aria-activedescendant]': 'state.activedescendant()',
     '(focusin)': 'state.load()',
     '(mouseenter)': 'state.load()',
@@ -22,10 +23,10 @@ import { Option } from './option.directive';
 export class Listbox {
   wrap = model.required<boolean>();
   vertical = model.required<boolean>();
-  followFocus = model.required<boolean>();
+  selectionMode = model.required<ListboxSelectionMode>();
   rovingFocus = model.required<boolean>();
   skipDisabled = model.required<boolean>();
-  multiselectable = model.required<boolean>();
+  multiselection = model.required<boolean>();
 
   // This is a demonstration of how we can rename properties
   // if their meaning becomes unclear after being forwarded.

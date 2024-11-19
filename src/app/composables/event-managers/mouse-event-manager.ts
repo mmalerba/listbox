@@ -60,7 +60,8 @@ export class MouseEventManager {
     return this;
   }
 
-  handle(event: MouseEvent) {
+  handle(event: MouseEvent): boolean {
+    let handled = false;
     for (const {
       button,
       modifiers,
@@ -70,6 +71,7 @@ export class MouseEventManager {
     } of this.handledButtons) {
       if (button === (event.button ?? 0) && modifiers === getModifiers(event)) {
         handler(event);
+        handled = true;
         if (stopPropagation) {
           event.stopPropagation();
         }
@@ -78,5 +80,6 @@ export class MouseEventManager {
         }
       }
     }
+    return handled;
   }
 }

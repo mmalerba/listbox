@@ -1,5 +1,3 @@
-import { computed } from '@angular/core';
-import { KeyboardEventManager } from '../event-managers/keyboard-event-manager';
 import {
   MouseButton,
   MouseEventManager,
@@ -10,19 +8,6 @@ import {
 } from './list-navigation-state';
 
 export class ListNavigationController<T extends ListNavigationItemInputs> {
-  private readonly keydownManager = computed(() => {
-    const prevKey =
-      this.state.orientation() === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
-    const nextKey =
-      this.state.orientation() === 'vertical' ? 'ArrowDown' : 'ArrowRight';
-    const manager = new KeyboardEventManager()
-      .on(prevKey, () => this.navigatePrevious())
-      .on(nextKey, () => this.navigateNext())
-      .on('Home', () => this.navigateFirst())
-      .on('End', () => this.navigateLast());
-    return manager;
-  });
-
   private readonly clickManager = new MouseEventManager().on(
     MouseButton.Main,
     (event) => {
@@ -34,10 +19,6 @@ export class ListNavigationController<T extends ListNavigationItemInputs> {
   );
 
   constructor(private readonly state: ListNavigationState<T>) {}
-
-  handleKeydown(e: KeyboardEvent) {
-    this.keydownManager().handle(e);
-  }
 
   handleClick(e: MouseEvent) {
     this.clickManager.handle(e);

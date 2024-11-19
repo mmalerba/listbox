@@ -6,10 +6,10 @@
       [wrap]="wrap"
       [vertical]="vertical"
       [rovingFocus]="rovingFocus"
-      [followFocus]="followFocus"
+      [selectionMode]="selectionMode()"
       [skipDisabled]="skipDisabled"
       [currentIndex]="currentIndex"
-      [multiselectable]="multiselectable"
+      [multiselection]="multiselection"
       [selectedIndices]="selectedIndices"
       [typeaheadDelay]="typeaheadDelay"
       [typeaheadMatcher]="typeaheadMatcher"
@@ -52,12 +52,12 @@
     </div>
 
     <div>
-      <label for="follow-focus-input">Selection Follows Focus: </label>
-      <input
-        id="follow-focus-input"
-        type="checkbox"
-        [(ngModel)]="followFocus"
-      />
+      <label for="follow-focus-input">Selection Mode: </label>
+      <select id="follow-focus-input" [(ngModel)]="selectionModeStr">
+        <option [value]="ListboxSelectionMode.Recommended">Recommended</option>
+        <option [value]="ListboxSelectionMode.FollowFocus">Follow Focus</option>
+        <option [value]="ListboxSelectionMode.Explicit">Explicit</option>
+      </select>
     </div>
 
     <div>
@@ -70,11 +70,11 @@
     </div>
 
     <div>
-      <label for="multiselectable-input">Multiselectable: </label>
+      <label for="multiselection-input">Multiple selection: </label>
       <input
-        id="multiselectable-input"
+        id="multiselection-input"
         type="checkbox"
-        [(ngModel)]="multiselectable"
+        [(ngModel)]="multiselection"
       />
     </div>
 
@@ -94,7 +94,7 @@
       <select
         id="selected-indices-input"
         [(ngModel)]="selectedIndices"
-        [multiple]="multiselectable"
+        [multiple]="multiselection"
       >
         @for (state of states; track state) {
         <option [value]="$index">{{ state }}</option>
