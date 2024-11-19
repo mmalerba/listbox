@@ -101,7 +101,7 @@ export class GridCellState {
   }
 
   async navigatePrev() {
-    (await this.navigationState.getController()).navigatePrev();
+    (await this.navigationState.getController()).navigatePrevious();
   }
 
   async navigateTo(index: number) {

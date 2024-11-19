@@ -23,17 +23,17 @@ export class Option {
   disabled = model<boolean>(false);
   listbox = inject(Listbox).state;
 
-  hostEl = inject(ElementRef).nativeElement;
+  element = inject(ElementRef).nativeElement;
   composable: OptionState;
 
   constructor() {
     this.composable = new OptionState(this);
     effect(() => {
       if (this.composable.focused()) {
-        this.hostEl.focus();
+        this.element.focus();
       }
       if (this.composable.active()) {
-        this.hostEl.scrollIntoView({
+        this.element.scrollIntoView({
           block: 'nearest',
         });
       }

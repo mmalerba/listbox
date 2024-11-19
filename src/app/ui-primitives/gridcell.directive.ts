@@ -37,7 +37,7 @@ export class GridCell {
 
   state: GridCellState;
   grid = inject(Grid).state;
-  hostEl = inject(ElementRef).nativeElement;
+  element = inject(ElementRef).nativeElement;
 
   children = contentChildren(Widget, { descendants: true });
   widgets = computed(() => this.children().map((c) => c.state));
@@ -47,11 +47,11 @@ export class GridCell {
 
     effect(() => {
       if (this.state.focused()) {
-        this.hostEl.focus();
+        this.element.focus();
       }
 
       if (this.state.active()) {
-        this.hostEl.scrollIntoView({
+        this.element.scrollIntoView({
           block: 'nearest',
         });
       }

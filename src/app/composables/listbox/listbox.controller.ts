@@ -20,31 +20,13 @@ export class ListboxController<T extends OptionState> {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    this.handleNavigation(event);
+    this.navigationController.handleKeydown(event);
+    this.state.typeaheadState.search(event.key);
     if (this.state.selectionState.multiselectable()) {
       this.handleMultiSelection(event);
     } else {
       this.handleSingleSelection(event);
     }
-  }
-
-  handleNavigation(event: KeyboardEvent) {
-    switch (event.key) {
-      case this.nextKey():
-        this.navigationController.navigateNext();
-        break;
-      case this.previousKey():
-        this.navigationController.navigatePrev();
-        break;
-      case 'Home':
-        this.navigationController.navigateFirst();
-        break;
-      case 'End':
-        this.navigationController.navigateLast();
-        break;
-    }
-
-    this.state.typeaheadState.search(event.key);
   }
 
   handleSingleSelection(event: KeyboardEvent) {
@@ -92,14 +74,12 @@ export class ListboxController<T extends OptionState> {
   }
 
   onPointerDown(event: PointerEvent) {
+    this.navigationController.handleClick(event);
+
     if (event.target instanceof HTMLElement) {
       const li = event.target.closest('li');
 
       if (li) {
-        const index = this.state.navigationState
-          .items()
-          .findIndex((i) => i.id() === li.id);
-        this.navigationController.navigateTo(index);
         this.state.selectionState.multiselectable()
           ? this.state.selectionState.toggle()
           : this.state.selectionState.select();

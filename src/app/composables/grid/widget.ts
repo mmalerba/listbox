@@ -3,6 +3,7 @@ import { GridState } from './grid';
 import { GridCellState } from './gridcell';
 
 export interface WidgetInputs {
+  element: HTMLElement;
   grid: GridState;
   cell: GridCellState;
   disabled: Signal<boolean>;
@@ -13,6 +14,7 @@ export interface WidgetInputs {
 let counter = -1;
 
 export class WidgetState {
+  element: HTMLElement;
   grid: GridState;
   cell: GridCellState;
   disabled: Signal<boolean>;
@@ -50,6 +52,7 @@ export class WidgetState {
   });
 
   constructor(inputs: WidgetInputs) {
+    this.element = inputs.element;
     this.grid = inputs.grid;
     this.cell = inputs.cell;
     this.disabled = inputs.disabled;

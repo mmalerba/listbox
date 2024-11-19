@@ -1,17 +1,54 @@
+import { computed } from '@angular/core';
+import { KeyboardEventManager } from '../event-managers/keyboard-event-manager';
+import {
+  MouseButton,
+  MouseEventManager,
+} from '../event-managers/mouse-event-manager';
 import {
   ListNavigationItemInputs,
   ListNavigationState,
 } from './list-navigation-state';
 
 export class ListNavigationController<T extends ListNavigationItemInputs> {
+  private readonly keydownManager = computed(() => {
+    const prevKey =
+      this.state.orientation() === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
+    const nextKey =
+      this.state.orientation() === 'vertical' ? 'ArrowDown' : 'ArrowRight';
+    const manager = new KeyboardEventManager()
+      .on(prevKey, () => this.navigatePrevious())
+      .on(nextKey, () => this.navigateNext())
+      .on('Home', () => this.navigateFirst())
+      .on('End', () => this.navigateLast());
+    return manager;
+  });
+
+  private readonly clickManager = new MouseEventManager().on(
+    MouseButton.Main,
+    (event) => {
+      const index = this.state
+        .items()
+        .findIndex((i) => i.element.contains(event.target as Node));
+      this.navigateTo(index);
+    }
+  );
+
   constructor(private readonly state: ListNavigationState<T>) {}
+
+  handleKeydown(e: KeyboardEvent) {
+    this.keydownManager().handle(e);
+  }
+
+  handleClick(e: MouseEvent) {
+    this.clickManager.handle(e);
+  }
 
   navigateTo(index: number): void {
     this.navigate(index, () => index);
   }
 
-  navigatePrev() {
-    this.navigate(this.state.currentIndex(), this.getPrevIndex);
+  navigatePrevious() {
+    this.navigate(this.state.currentIndex(), this.getPreviousIndex);
   }
 
   navigateNext() {
@@ -23,10 +60,10 @@ export class ListNavigationController<T extends ListNavigationItemInputs> {
   }
 
   navigateLast() {
-    this.navigate(-1, this.getPrevIndex);
+    this.navigate(-1, this.getPreviousIndex);
   }
 
-  private getPrevIndex = (index: number) => {
+  private getPreviousIndex = (index: number) => {
     index = index === -1 ? this.state.items().length : index;
     return this.state.wrap() && index === 0
       ? this.state.items().length - 1

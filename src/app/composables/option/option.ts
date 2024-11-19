@@ -2,6 +2,7 @@ import { computed, Signal } from '@angular/core';
 import { ListboxState } from '../listbox/listbox';
 
 export interface OptionInputs {
+  element: HTMLElement;
   disabled: Signal<boolean>;
   searchTerm: Signal<string>;
   listbox: ListboxState<OptionState>;
@@ -10,6 +11,7 @@ export interface OptionInputs {
 let counter = -1;
 
 export class OptionState {
+  element: HTMLElement;
   disabled: Signal<boolean>;
   searchTerm: Signal<string>;
   listbox: ListboxState<OptionState>;
@@ -33,6 +35,7 @@ export class OptionState {
   tabindex = computed(() => (this.focused() ? 0 : -1));
 
   constructor(args: OptionInputs) {
+    this.element = args.element;
     this.listbox = args.listbox;
     this.disabled = args.disabled;
     this.searchTerm = args.searchTerm;

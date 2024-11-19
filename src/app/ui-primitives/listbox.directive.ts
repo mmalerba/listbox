@@ -16,7 +16,7 @@ import { Option } from './option.directive';
     '(focusin)': 'state.load()',
     '(mouseenter)': 'state.load()',
     '(keydown)': 'state.onKeyDown($event)',
-    '(pointerdown)': 'state.onPointerDown($event)',
+    '(click)': 'state.onPointerDown($event)',
   },
 })
 export class Listbox {

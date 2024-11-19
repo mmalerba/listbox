@@ -17,7 +17,7 @@ export class Widget {
   state: WidgetState;
   grid = inject(Grid).state;
   cell = inject(GridCell).state;
-  hostEl = inject(ElementRef).nativeElement;
+  element = inject(ElementRef).nativeElement;
 
   disabled = model<boolean>(false);
   editable = model<boolean>(false);
@@ -29,11 +29,11 @@ export class Widget {
 
     effect(() => {
       if (this.state.focused() && !isInitialLoad) {
-        this.hostEl.focus();
+        this.element.focus();
       }
 
       if (this.state.active() && !isInitialLoad) {
-        this.hostEl.scrollIntoView({
+        this.element.scrollIntoView({
           block: 'nearest',
         });
       }
