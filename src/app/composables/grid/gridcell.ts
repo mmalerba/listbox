@@ -1,5 +1,5 @@
 import { computed, Signal, WritableSignal } from '@angular/core';
-import { FocusState } from '../focus/focus';
+import { FocusState } from '../focus/focus-state';
 import { ListNavigationState } from '../navigation/list-navigation-state';
 import { GridState, RowCol } from './grid';
 import { WidgetState } from './widget';

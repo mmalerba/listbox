@@ -1,5 +1,5 @@
 import { Signal } from '@angular/core';
-import { FocusInputs, FocusState } from '../focus/focus';
+import { FocusInputs, FocusState } from '../focus/focus-state';
 import {
   ListNavigationInputs,
   ListNavigationState,
@@ -25,7 +25,7 @@ export class ListboxState<T extends OptionState> {
 
   readonly tabindex: Signal<number>;
   readonly multiselectable: Signal<boolean>;
-  readonly activedescendant: Signal<string>;
+  readonly activedescendant: Signal<string | null>;
   readonly orientation: Signal<Orientation>;
 
   controller: ListboxController<T> | null = null;
