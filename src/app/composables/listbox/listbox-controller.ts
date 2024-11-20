@@ -1,15 +1,15 @@
 import { computed } from '@angular/core';
-import { KeyboardEventManager } from '../event-managers/keyboard-event-manager';
+import { KeyboardEventManager } from '../event-manager/keyboard-event-manager';
 import {
   MouseButton,
   MouseEventManager,
-} from '../event-managers/mouse-event-manager';
-import { ModifierKey } from '../event-managers/shared';
+} from '../event-manager/mouse-event-manager';
+import { ModifierKey } from '../event-manager/shared';
 import { ListNavigationController } from '../navigation/list-navigation-controller';
-import { OptionState } from '../option/option';
+import { OptionState } from '../option/option-state';
 import { SelectionController } from '../selection/selection-controller';
 import { TypeaheadController } from '../typeahead/typeahead-controller';
-import { ListboxState } from './listbox';
+import { ListboxState } from './listbox-state';
 
 export enum ListboxSelectionMode {
   Recommended,
@@ -55,7 +55,7 @@ export class ListboxController<T extends OptionState> {
       : this.getSingleSelectionClickManager()
   );
 
-  constructor(readonly state: ListboxState<T>) {
+  constructor(private readonly state: ListboxState<T>) {
     this.navigationController = new ListNavigationController(
       state.navigationState
     );
@@ -63,11 +63,11 @@ export class ListboxController<T extends OptionState> {
     this.typeaheadController = new TypeaheadController(state.typeaheadState);
   }
 
-  onKeyDown(event: KeyboardEvent) {
+  handleKeydown(event: KeyboardEvent) {
     this.keydownManager().handle(event);
   }
 
-  onPointerDown(event: PointerEvent) {
+  handleClick(event: MouseEvent) {
     this.clickManager().handle(event);
   }
 

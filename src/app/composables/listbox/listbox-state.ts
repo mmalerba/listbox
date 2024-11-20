@@ -4,11 +4,11 @@ import {
   ListNavigationInputs,
   ListNavigationState,
 } from '../navigation/list-navigation-state';
-import { OptionState } from '../option/option';
+import { OptionState } from '../option/option-state';
 import { SelectionInputs, SelectionState } from '../selection/selection-state';
 import { TypeAheadInputs, TypeAheadState } from '../typeahead/typeahead-state';
 import type { Orientation } from '../types';
-import { ListboxController, ListboxSelectionMode } from './listbox.controller';
+import { ListboxController, ListboxSelectionMode } from './listbox-controller';
 
 export type ListboxInputs<T extends OptionState> = {
   orientation: Signal<Orientation>;
@@ -32,7 +32,7 @@ export class ListboxState<T extends OptionState> {
   readonly selectionMode: Signal<ListboxSelectionMode>;
   readonly currentIndex: WritableSignal<number>;
 
-  controller: ListboxController<T> | null = null;
+  private controller?: ListboxController<T> | null = null;
 
   constructor(inputs: ListboxInputs<T>) {
     this.focusState = new FocusState(inputs);
@@ -49,28 +49,21 @@ export class ListboxState<T extends OptionState> {
     this.selectionMode = inputs.selectionMode;
   }
 
-  private async getController() {
-    if (this.controller === null) {
-      const { ListboxController } = await import('./listbox.controller');
+  async getController() {
+    if (!this.controller) {
+      const { ListboxController } = await import('./listbox-controller');
       this.controller = new ListboxController(this);
     }
     return this.controller;
   }
 
-  async load() {
-    this.getController();
-    this.typeaheadState.getController();
-    this.selectionState.getController();
-    this.navigationState.getController();
+  async handleKeydown(e: KeyboardEvent) {
+    const controller = await this.getController();
+    controller.handleKeydown(e);
   }
 
-  async onKeyDown(event: KeyboardEvent) {
+  async handleClick(e: MouseEvent) {
     const controller = await this.getController();
-    controller.onKeyDown(event);
-  }
-
-  async onPointerDown(event: PointerEvent) {
-    const controller = await this.getController();
-    controller.onPointerDown(event);
+    controller.handleClick(e);
   }
 }

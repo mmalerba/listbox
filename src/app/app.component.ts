@@ -1,7 +1,7 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ListboxSelectionMode } from './composables/listbox/listbox.controller';
+import { ListboxSelectionMode } from './composables/listbox/listbox-controller';
 import { StatesService } from './states.service';
 import { Grid } from './ui-primitives/grid.directive';
 import { GridCell } from './ui-primitives/gridcell.directive';

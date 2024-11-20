@@ -1,5 +1,5 @@
 import { Directive, effect, ElementRef, inject, model } from '@angular/core';
-import { OptionState } from '../composables/option/option';
+import { OptionState } from '../composables/option/option-state';
 import { Listbox } from './listbox.directive';
 
 @Directive({

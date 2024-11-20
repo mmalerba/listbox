@@ -3,7 +3,7 @@ import { TypeAheadItemInputs, TypeAheadState } from './typeahead-state';
 export class TypeaheadController<T extends TypeAheadItemInputs> {
   private timeout: any;
 
-  constructor(readonly state: TypeAheadState<T>) {}
+  constructor(private readonly state: TypeAheadState<T>) {}
 
   search(char: string) {
     if (!this.isValidCharacter(char)) {
