@@ -6,7 +6,7 @@ import {
 } from '../navigation/list-navigation-state';
 import { OptionState } from '../option/option';
 import { SelectionInputs, SelectionState } from '../selection/selection-state';
-import { TypeAheadInputs, TypeAheadState } from '../typeahead/typeahead';
+import { TypeAheadInputs, TypeAheadState } from '../typeahead/typeahead-state';
 import type { Orientation } from '../types';
 import { ListboxController, ListboxSelectionMode } from './listbox.controller';
 

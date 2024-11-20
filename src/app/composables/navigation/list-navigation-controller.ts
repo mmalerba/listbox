@@ -1,28 +1,10 @@
 import {
-  MouseButton,
-  MouseEventManager,
-} from '../event-managers/mouse-event-manager';
-import {
   ListNavigationItemInputs,
   ListNavigationState,
 } from './list-navigation-state';
 
 export class ListNavigationController<T extends ListNavigationItemInputs> {
-  private readonly clickManager = new MouseEventManager().on(
-    MouseButton.Main,
-    (event) => {
-      const index = this.state
-        .items()
-        .findIndex((i) => i.element.contains(event.target as Node));
-      this.navigateTo(index);
-    }
-  );
-
   constructor(private readonly state: ListNavigationState<T>) {}
-
-  handleClick(e: MouseEvent) {
-    this.clickManager.handle(e);
-  }
 
   navigateTo(index: number): void {
     this.navigate(index, () => index);

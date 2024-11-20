@@ -1,9 +1,12 @@
 import { SelectionItemInputs, SelectionState } from './selection-state';
 
-export class SelectionController<T extends SelectionItemInputs> {
-  constructor(readonly state: SelectionState<T>) {}
+// TODO: don't select disabled items.
 
-  select(index = this.state.currentIndex()) {
+export class SelectionController<T extends SelectionItemInputs> {
+  constructor(private readonly state: SelectionState<T>) {}
+
+  select() {
+    const index = this.state.currentIndex();
     if (this.state.multiselection()) {
       this.setSelection([...this.state.selectedIndices(), index]);
     } else {
@@ -12,15 +15,16 @@ export class SelectionController<T extends SelectionItemInputs> {
     this.state.lastSelected.set(index);
   }
 
-  deselect(index = this.state.currentIndex()) {
+  deselect() {
+    const index = this.state.currentIndex();
     this.setSelection(this.state.selectedIndices().filter((i) => i !== index));
     this.state.lastSelected.set(index);
   }
 
-  toggle(index = this.state.currentIndex()) {
-    this.state.selectedIndices().includes(index)
-      ? this.deselect(index)
-      : this.select(index);
+  toggle() {
+    this.state.selectedIndices().includes(this.state.currentIndex())
+      ? this.deselect()
+      : this.select();
   }
 
   selectAll() {
@@ -41,8 +45,8 @@ export class SelectionController<T extends SelectionItemInputs> {
     }
   }
 
-  selectContiguousRange(toIndex = this.state.currentIndex()) {
-    this.selectRange(this.state.lastSelected(), toIndex);
+  selectContiguousRange() {
+    this.selectRange(this.state.lastSelected(), this.state.currentIndex());
   }
 
   selectRange(fromIndex: number, toIndex: number) {

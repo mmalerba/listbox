@@ -1,9 +1,14 @@
 import { computed } from '@angular/core';
 import { KeyboardEventManager } from '../event-managers/keyboard-event-manager';
+import {
+  MouseButton,
+  MouseEventManager,
+} from '../event-managers/mouse-event-manager';
 import { ModifierKey } from '../event-managers/shared';
 import { ListNavigationController } from '../navigation/list-navigation-controller';
 import { OptionState } from '../option/option';
 import { SelectionController } from '../selection/selection-controller';
+import { TypeaheadController } from '../typeahead/typeahead-controller';
 import { ListboxState } from './listbox';
 
 export enum ListboxSelectionMode {
@@ -15,6 +20,7 @@ export enum ListboxSelectionMode {
 export class ListboxController<T extends OptionState> {
   private navigationController: ListNavigationController<T>;
   private selectionController: SelectionController<T>;
+  private typeaheadController: TypeaheadController<T>;
 
   private readonly keydownManager = computed(() => {
     const previousKey =
@@ -43,30 +49,26 @@ export class ListboxController<T extends OptionState> {
     }
   });
 
+  private readonly clickManager = computed(() =>
+    this.state.multiselection()
+      ? this.getMultiSelectionClickManager()
+      : this.getSingleSelectionClickManager()
+  );
+
   constructor(readonly state: ListboxState<T>) {
     this.navigationController = new ListNavigationController(
       state.navigationState
     );
     this.selectionController = new SelectionController(state.selectionState);
+    this.typeaheadController = new TypeaheadController(state.typeaheadState);
   }
 
   onKeyDown(event: KeyboardEvent) {
     this.keydownManager().handle(event);
-    this.state.typeaheadState.search(event.key);
   }
 
   onPointerDown(event: PointerEvent) {
-    this.navigationController.handleClick(event);
-
-    if (event.target instanceof HTMLElement) {
-      const li = event.target.closest('li');
-
-      if (li) {
-        this.state.selectionState.multiselection()
-          ? this.selectionController.toggle()
-          : this.selectionController.select();
-      }
-    }
+    this.clickManager().handle(event);
   }
 
   private getFollowFocusSingleSelectionKeydownManager(
@@ -89,7 +91,22 @@ export class ListboxController<T extends OptionState> {
       .on('End', () => {
         this.navigationController.navigateLast();
         this.selectionController.select();
-      });
+      })
+      .on(
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+          this.selectionController.select();
+        }
+      )
+      .on(
+        ModifierKey.Shift,
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+          this.selectionController.select();
+        }
+      );
   }
 
   private getExplicitSingleSelectionKeydownManager(
@@ -111,7 +128,20 @@ export class ListboxController<T extends OptionState> {
       })
       .on(' ', () => {
         this.selectionController.select();
-      });
+      })
+      .on(
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+        }
+      )
+      .on(
+        ModifierKey.Shift,
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+        }
+      );
   }
 
   private getExplicitMultiSelectionKeydownManager(
@@ -158,7 +188,20 @@ export class ListboxController<T extends OptionState> {
       })
       .on(ModifierKey.Ctrl, 'a', () => {
         this.selectionController.toggleAll();
-      });
+      })
+      .on(
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+        }
+      )
+      .on(
+        ModifierKey.Shift,
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+        }
+      );
   }
 
   private getFollowFocusMultiSelectionKeydownManager(
@@ -219,6 +262,57 @@ export class ListboxController<T extends OptionState> {
       })
       .on(ModifierKey.Ctrl, 'a', () => {
         this.selectionController.toggleAll();
+      })
+      .on(
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+          this.selectionController.deselectAll();
+          this.selectionController.select();
+        }
+      )
+      .on(
+        ModifierKey.Shift,
+        (key) => this.typeaheadController.isValidCharacter(key),
+        (event) => {
+          this.typeaheadController.search(event.key);
+          this.selectionController.deselectAll();
+          this.selectionController.select();
+        }
+      );
+  }
+
+  private getSingleSelectionClickManager() {
+    return new MouseEventManager().on(MouseButton.Main, (event) => {
+      const index = this.state
+        .items()
+        .findIndex(
+          (o) => o.element.contains(event.target as Node) && !o.disabled()
+        );
+      this.navigationController.navigateTo(index);
+      this.selectionController.select();
+    });
+  }
+
+  private getMultiSelectionClickManager() {
+    return new MouseEventManager()
+      .on(MouseButton.Main, (event) => {
+        const index = this.state
+          .items()
+          .findIndex(
+            (o) => o.element.contains(event.target as Node) && !o.disabled()
+          );
+        this.navigationController.navigateTo(index);
+        this.selectionController.toggle();
+      })
+      .on(ModifierKey.Shift, MouseButton.Main, (event) => {
+        const index = this.state
+          .items()
+          .findIndex(
+            (o) => o.element.contains(event.target as Node) && !o.disabled()
+          );
+        this.navigationController.navigateTo(index);
+        this.selectionController.selectContiguousRange();
       });
   }
 }
