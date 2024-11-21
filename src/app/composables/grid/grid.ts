@@ -1,6 +1,9 @@
 import { computed, linkedSignal, Signal, WritableSignal } from '@angular/core';
-import { FocusState } from '../focus/focus-state';
-import { GridNavigationState } from '../navigation/grid-navigation-state';
+import { FocusInputs, FocusState } from '../focus/focus-state';
+import {
+  GridNavigationInputs,
+  GridNavigationState,
+} from '../navigation/grid-navigation-state';
 import type { GridController } from './grid.controller';
 import { GridCellState } from './gridcell';
 
@@ -9,24 +12,19 @@ export interface GridCoordinate {
   col: number;
 }
 
-export interface GridInputs {
-  wrap: Signal<boolean>;
-  rovingFocus: Signal<boolean>;
-  cells: Signal<GridCellState[][]>;
-  skipDisabled: WritableSignal<boolean>;
-  currentGridCoordinate: WritableSignal<GridCoordinate>;
-}
+export type GridInputs<T extends GridCellState> = GridNavigationInputs<T> &
+  FocusInputs<T>;
 
-export class GridState {
+export class GridState<T extends GridCellState> {
   wrap: Signal<boolean>;
   rovingFocus: Signal<boolean>;
-  cells: Signal<GridCellState[][]>;
-  skipDisabled: WritableSignal<boolean>;
+  cells: Signal<T[][]>;
+  skipDisabled: Signal<boolean>;
   currentGridCoordinate: WritableSignal<GridCoordinate>;
-  currentCell: Signal<GridCellState>;
-  focusedCell: Signal<GridCellState | void>;
-  activeCell: Signal<GridCellState | void>;
-  items: Signal<GridCellState[]>;
+  currentCell: Signal<T>;
+  focusedCell: Signal<T | undefined>;
+  activeCell: Signal<T | undefined>;
+  items: Signal<T[]>;
   currentIndex: WritableSignal<number>;
 
   tabindex: Signal<number>;
@@ -48,11 +46,11 @@ export class GridState {
     return colcount;
   });
 
-  focusState: FocusState<GridCellState>;
-  navigationState: GridNavigationState<GridCellState>;
-  controller: GridController | null = null;
+  focusState: FocusState<T>;
+  navigationState: GridNavigationState<T>;
+  controller?: GridController<T>;
 
-  constructor(inputs: GridInputs) {
+  constructor(inputs: GridInputs<T>) {
     this.wrap = inputs.wrap;
     this.cells = inputs.cells;
     this.rovingFocus = inputs.rovingFocus;
@@ -88,7 +86,7 @@ export class GridState {
   }
 
   private async getController() {
-    if (this.controller === null) {
+    if (!this.controller) {
       const { GridController } = await import('./grid.controller');
       this.controller = new GridController(this);
     }

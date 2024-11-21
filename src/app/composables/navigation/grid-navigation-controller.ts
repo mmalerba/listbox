@@ -6,7 +6,7 @@ import {
 } from './grid-navigation-state';
 
 export class GridNavigationController<T extends GridNavigationCellInputs> {
-  constructor(readonly state: GridNavigationState<T>) {}
+  constructor(private readonly state: GridNavigationState<T>) {}
 
   navigateTo(coordinate: GridCoordinate): void {
     const item = this.state.getCellAt(coordinate);

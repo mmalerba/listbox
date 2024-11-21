@@ -1,14 +1,14 @@
-import { Signal } from '@angular/core';
+import { GridNavigationController } from '../navigation/grid-navigation-controller';
 import { GridState } from './grid';
 import { GridCellState } from './gridcell';
 
-export class GridController {
-  inWidgetMode: Signal<boolean>;
-  currentCell: Signal<GridCellState>;
+export class GridController<T extends GridCellState> {
+  private navigationController: GridNavigationController<T>;
 
-  constructor(readonly state: GridState) {
-    this.currentCell = this.state.currentCell;
-    this.inWidgetMode = this.state.inWidgetMode;
+  constructor(readonly state: GridState<T>) {
+    this.navigationController = new GridNavigationController(
+      state.navigationState
+    );
   }
 
   onPointerDown(event: PointerEvent) {
@@ -26,7 +26,7 @@ export class GridController {
         }
 
         const widgetEl = event.target.closest('.widget');
-        this.state.navigationState.navigateTo(cell.coordinate());
+        this.navigationController.navigateTo(cell.coordinate());
 
         if (widgetEl) {
           const widget = cell.widgets().find((w) => w.id() === widgetEl.id)!;
@@ -61,7 +61,7 @@ export class GridController {
       return;
     }
 
-    const cell = this.currentCell();
+    const cell = this.state.currentCell();
 
     if (cell.inWidgetMode()) {
       return;
@@ -77,7 +77,7 @@ export class GridController {
   }
 
   onEnter() {
-    const cell = this.currentCell();
+    const cell = this.state.currentCell();
 
     if (cell.disabled() || cell.inWidgetMode()) {
       return;
@@ -89,50 +89,62 @@ export class GridController {
   }
 
   onEscape() {
-    this.currentCell().widgetIndex.set(-1);
+    this.state.currentCell().widgetIndex.set(-1);
   }
 
   onArrowRight() {
-    if (!this.inWidgetMode() || this.currentCell().autofocusWidget()) {
-      this.state.navigationState.navigateRight();
+    if (
+      !this.state.inWidgetMode() ||
+      this.state.currentCell().autofocusWidget()
+    ) {
+      this.navigationController.navigateRight();
       return;
     }
 
-    if (this.currentCell().hasNavigation()) {
-      this.currentCell().navigateNext();
+    if (this.state.currentCell().hasNavigation()) {
+      this.state.currentCell().navigateNext();
     }
   }
 
   onArrowLeft() {
-    if (!this.inWidgetMode() || this.currentCell().autofocusWidget()) {
-      this.state.navigationState.navigateLeft();
+    if (
+      !this.state.inWidgetMode() ||
+      this.state.currentCell().autofocusWidget()
+    ) {
+      this.navigationController.navigateLeft();
       return;
     }
 
-    if (this.currentCell().hasNavigation()) {
-      this.currentCell().navigatePrev();
+    if (this.state.currentCell().hasNavigation()) {
+      this.state.currentCell().navigatePrev();
     }
   }
 
   onArrowDown() {
-    if (!this.inWidgetMode() || this.currentCell().autofocusWidget()) {
-      this.state.navigationState.navigateDown();
+    if (
+      !this.state.inWidgetMode() ||
+      this.state.currentCell().autofocusWidget()
+    ) {
+      this.navigationController.navigateDown();
       return;
     }
 
-    if (this.currentCell().hasNavigation()) {
-      this.currentCell().navigateNext();
+    if (this.state.currentCell().hasNavigation()) {
+      this.state.currentCell().navigateNext();
     }
   }
 
   onArrowUp() {
-    if (!this.inWidgetMode() || this.currentCell().autofocusWidget()) {
-      this.state.navigationState.navigateUp();
+    if (
+      !this.state.inWidgetMode() ||
+      this.state.currentCell().autofocusWidget()
+    ) {
+      this.navigationController.navigateUp();
       return;
     }
 
-    if (this.currentCell().hasNavigation()) {
-      this.currentCell().navigatePrev();
+    if (this.state.currentCell().hasNavigation()) {
+      this.state.currentCell().navigatePrev();
     }
   }
 }
