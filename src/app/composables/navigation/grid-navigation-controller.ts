@@ -1,5 +1,5 @@
 import { computed, signal } from '@angular/core';
-import type { GridCoordinate } from '../grid/grid';
+import type { GridCoordinate } from '../grid/grid-state';
 import {
   GridNavigationCellInputs,
   GridNavigationState,

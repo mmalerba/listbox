@@ -9,7 +9,7 @@ export enum MouseButton {
 export interface MouseEventHandlerConfig extends EventHandlerOptions {
   button: number;
   modifiers: number;
-  handler: (event: MouseEvent) => void;
+  handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean);
 }
 
 export class MouseEventManager {
@@ -28,12 +28,12 @@ export class MouseEventManager {
   on(
     modifiers: number,
     button: MouseButton,
-    handler: (event: MouseEvent) => void,
+    handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean),
     options?: EventHandlerOptions
   ): MouseEventManager;
   on(
     button: MouseButton,
-    handler: (event: MouseEvent) => void,
+    handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean),
     options?: EventHandlerOptions
   ): MouseEventManager;
   on(...args: any[]) {
@@ -61,7 +61,7 @@ export class MouseEventManager {
   }
 
   handle(event: MouseEvent): boolean {
-    let handled = false;
+    let eventHandled = false;
     for (const {
       button,
       modifiers,
@@ -70,16 +70,18 @@ export class MouseEventManager {
       preventDefault,
     } of this.handledButtons) {
       if (button === (event.button ?? 0) && modifiers === getModifiers(event)) {
-        handler(event);
-        handled = true;
-        if (stopPropagation) {
-          event.stopPropagation();
-        }
-        if (preventDefault) {
-          event.preventDefault();
+        const handled = handler(event) !== false;
+        if (handled) {
+          eventHandled = true;
+          if (stopPropagation) {
+            event.stopPropagation();
+          }
+          if (preventDefault) {
+            event.preventDefault();
+          }
         }
       }
     }
-    return handled;
+    return eventHandled;
   }
 }

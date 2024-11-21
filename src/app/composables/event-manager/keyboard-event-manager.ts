@@ -3,7 +3,9 @@ import { EventHandlerOptions, getModifiers } from './shared';
 export interface KeyboardEventHandlerConfig extends EventHandlerOptions {
   key: string | ((key: string) => boolean);
   modifiers: number;
-  handler: (event: KeyboardEvent) => void;
+  handler:
+    | ((event: KeyboardEvent) => void)
+    | ((event: KeyboardEvent) => boolean);
 }
 
 export class KeyboardEventManager {
@@ -22,12 +24,16 @@ export class KeyboardEventManager {
   on(
     modifiers: number,
     key: string | ((key: string) => boolean),
-    handler: (event: KeyboardEvent) => void,
+    handler:
+      | ((event: KeyboardEvent) => void)
+      | ((event: KeyboardEvent) => boolean),
     options?: Partial<EventHandlerOptions>
   ): KeyboardEventManager;
   on(
     key: string | ((key: string) => boolean),
-    handler: (event: KeyboardEvent) => void,
+    handler:
+      | ((event: KeyboardEvent) => void)
+      | ((event: KeyboardEvent) => boolean),
     options?: Partial<EventHandlerOptions>
   ): KeyboardEventManager;
   on(...args: any[]) {
@@ -52,7 +58,7 @@ export class KeyboardEventManager {
   }
 
   handle(event: KeyboardEvent): boolean {
-    let handled = false;
+    let eventHandled = false;
     for (const {
       key,
       modifiers,
@@ -65,16 +71,18 @@ export class KeyboardEventManager {
           ? key.toUpperCase() === event.key.toUpperCase()
           : key(event.key);
       if (keyMatches && modifiers === getModifiers(event)) {
-        handler(event);
-        handled = true;
-        if (stopPropagation) {
-          event.stopPropagation();
-        }
-        if (preventDefault) {
-          event.preventDefault();
+        const handled = handler(event) !== false;
+        if (handled) {
+          eventHandled = true;
+          if (stopPropagation) {
+            event.stopPropagation();
+          }
+          if (preventDefault) {
+            event.preventDefault();
+          }
         }
       }
     }
-    return handled;
+    return eventHandled;
   }
 }

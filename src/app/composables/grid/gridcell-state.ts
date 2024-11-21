@@ -1,42 +1,45 @@
 import { computed, Signal, WritableSignal } from '@angular/core';
 import { FocusState } from '../focus/focus-state';
 import { ListNavigationState } from '../navigation/list-navigation-state';
-import { GridCoordinate, GridState } from './grid';
-import { WidgetState } from './widget';
+import { GridCoordinate, GridState } from './grid-state';
+import { WidgetState } from './widget-state';
 
 export interface GridCellInputs {
-  grid: GridState;
-  wrap: Signal<boolean>;
-  rowspan: Signal<number>;
-  colspan: Signal<number>;
-  disabled: Signal<boolean>;
-  widgets: Signal<WidgetState[]>;
-  widgetIndex: WritableSignal<number>;
+  readonly element: HTMLElement;
+  readonly grid: GridState<GridCellState>;
+  readonly wrap: Signal<boolean>;
+  readonly rowspan: Signal<number>;
+  readonly colspan: Signal<number>;
+  readonly disabled: Signal<boolean>;
+  readonly widgets: Signal<WidgetState[]>;
+  readonly widgetIndex: WritableSignal<number>;
 }
 
+// TODO: use cdk id generator.
 let counter = -1;
 
 export class GridCellState {
-  grid: GridState;
-  wrap: Signal<boolean>;
-  rowspan: Signal<number>;
-  colspan: Signal<number>;
-  disabled: Signal<boolean>;
-  widgets: Signal<WidgetState[]>;
-  widgetIndex: WritableSignal<number>;
+  readonly element: HTMLElement;
+  readonly grid: GridState<GridCellState>;
+  readonly wrap: Signal<boolean>;
+  readonly rowspan: Signal<number>;
+  readonly colspan: Signal<number>;
+  readonly disabled: Signal<boolean>;
+  readonly widgets: Signal<WidgetState[]>;
+  readonly widgetIndex: WritableSignal<number>;
 
-  focusState: FocusState<WidgetState>;
-  navigationState: ListNavigationState<WidgetState>;
+  readonly focusState: FocusState<WidgetState>;
+  readonly navigationState: ListNavigationState<WidgetState>;
 
-  id = computed(() => `gridcell-${counter++}`);
-  coordinate = computed(() => getIndex(this.grid.cells(), this.id()));
-  tabindex = computed(() => (this.focused() ? 0 : -1));
+  readonly id = computed(() => `gridcell-${counter++}`);
+  readonly coordinate = computed(() => getIndex(this.grid.cells(), this.id()));
+  readonly tabindex = computed(() => (this.focused() ? 0 : -1));
 
-  inWidgetMode = computed(
+  readonly inWidgetMode = computed(
     () => this.autofocusWidget() || this.widgetIndex() !== -1
   );
 
-  autofocusWidget = computed(() => {
+  readonly autofocusWidget = computed(() => {
     const widget = this.widgets().at(0);
 
     return (
@@ -46,10 +49,10 @@ export class GridCellState {
     );
   });
 
-  hasNavigation = computed(() => this.widgets().length > 1);
-  isCurrent = computed(() => this.grid.currentCell() === this);
+  readonly hasNavigation = computed(() => this.widgets().length > 1);
+  readonly isCurrent = computed(() => this.grid.currentCell() === this);
 
-  active = computed(() => {
+  readonly active = computed(() => {
     return (
       !this.autofocusWidget() &&
       this.widgetIndex() === -1 &&
@@ -57,7 +60,7 @@ export class GridCellState {
     );
   });
 
-  focused = computed(() => {
+  readonly focused = computed(() => {
     return (
       !this.autofocusWidget() &&
       this.widgetIndex() === -1 &&
@@ -66,6 +69,7 @@ export class GridCellState {
   });
 
   constructor(inputs: GridCellInputs) {
+    this.element = inputs.element;
     this.grid = inputs.grid;
     this.wrap = inputs.wrap;
     this.rowspan = inputs.rowspan;
@@ -86,24 +90,7 @@ export class GridCellState {
       items: this.widgets,
       currentIndex: this.widgetIndex,
       skipDisabled: this.grid.skipDisabled,
-      orientation: computed(() => 'vertical'), // TODO: support vertical & horizontal.
     });
-  }
-
-  load() {
-    this.navigationState.getController();
-  }
-
-  async navigateNext() {
-    (await this.navigationState.getController()).navigateNext();
-  }
-
-  async navigatePrev() {
-    (await this.navigationState.getController()).navigatePrevious();
-  }
-
-  async navigateTo(index: number) {
-    (await this.navigationState.getController()).navigateTo(index);
   }
 }
 

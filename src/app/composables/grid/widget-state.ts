@@ -1,37 +1,38 @@
 import { computed, Signal } from '@angular/core';
-import { GridState } from './grid';
-import { GridCellState } from './gridcell';
+import { GridState } from './grid-state';
+import { GridCellState } from './gridcell-state';
 
 export interface WidgetInputs {
-  element: HTMLElement;
-  grid: GridState;
-  cell: GridCellState;
-  disabled: Signal<boolean>;
-  editable: Signal<boolean>;
-  usesArrowKeys: Signal<boolean>;
+  readonly element: HTMLElement;
+  readonly grid: GridState<GridCellState>;
+  readonly cell: GridCellState;
+  readonly disabled: Signal<boolean>;
+  readonly editable: Signal<boolean>;
+  readonly usesArrowKeys: Signal<boolean>;
 }
 
+// TODO: use cdk id generator.
 let counter = -1;
 
 export class WidgetState {
-  element: HTMLElement;
-  grid: GridState;
-  cell: GridCellState;
-  disabled: Signal<boolean>;
-  editable: Signal<boolean>;
-  usesArrowKeys: Signal<boolean>;
-  class = computed(() => 'widget');
+  readonly element: HTMLElement;
+  readonly grid: GridState<GridCellState>;
+  readonly cell: GridCellState;
+  readonly disabled: Signal<boolean>;
+  readonly editable: Signal<boolean>;
+  readonly usesArrowKeys: Signal<boolean>;
+  readonly class = computed(() => 'widget');
 
-  id = computed(() => `widget-${counter++}`);
-  tabindex = computed(() => (this.focused() ? 0 : -1));
+  readonly id = computed(() => `widget-${counter++}`);
+  readonly tabindex = computed(() => (this.focused() ? 0 : -1));
 
-  index = computed(() => {
+  readonly index = computed(() => {
     return this.cell.widgets().findIndex((w) => {
       return w.id() === this.id();
     });
   });
 
-  active = computed(() => {
+  readonly active = computed(() => {
     if (this.cell.isCurrent()) {
       return (
         this.cell.autofocusWidget() ||
@@ -41,7 +42,7 @@ export class WidgetState {
     return false;
   });
 
-  focused = computed(() => {
+  readonly focused = computed(() => {
     if (this.cell.isCurrent()) {
       return (
         this.cell.autofocusWidget() ||

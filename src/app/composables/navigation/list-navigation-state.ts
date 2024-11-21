@@ -1,5 +1,4 @@
 import { computed, Signal, WritableSignal } from '@angular/core';
-import type { Orientation } from '../types';
 import type { ListNavigationController } from './list-navigation-controller';
 
 export interface ListNavigationItemInputs {
@@ -11,7 +10,6 @@ export interface ListNavigationInputs<T extends ListNavigationItemInputs> {
   readonly wrap: Signal<boolean>;
   readonly items: Signal<T[]>;
   readonly skipDisabled: Signal<boolean>;
-  readonly orientation: Signal<Orientation>;
   readonly currentIndex: WritableSignal<number>;
 }
 
@@ -19,7 +17,6 @@ export class ListNavigationState<T extends ListNavigationItemInputs> {
   readonly wrap: Signal<boolean>;
   readonly items: Signal<T[]>;
   readonly skipDisabled: Signal<boolean>;
-  readonly orientation: Signal<Orientation>;
   readonly currentIndex: WritableSignal<number>;
 
   readonly currentItem = computed(() => this.items()[this.currentIndex()]);
@@ -30,7 +27,6 @@ export class ListNavigationState<T extends ListNavigationItemInputs> {
     this.wrap = inputs.wrap;
     this.items = inputs.items;
     this.skipDisabled = inputs.skipDisabled;
-    this.orientation = inputs.orientation;
     this.currentIndex = inputs.currentIndex;
   }
 

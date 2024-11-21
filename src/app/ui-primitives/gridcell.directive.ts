@@ -7,7 +7,7 @@ import {
   inject,
   model,
 } from '@angular/core';
-import { GridCellState } from '../composables/grid/gridcell';
+import { GridCellState } from '../composables/grid/gridcell-state';
 import { Grid } from './grid.directive';
 import { Widget } from './widget.directive';
 

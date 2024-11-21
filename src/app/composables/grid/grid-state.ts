@@ -1,39 +1,41 @@
 import { computed, linkedSignal, Signal, WritableSignal } from '@angular/core';
-import { FocusInputs, FocusState } from '../focus/focus-state';
-import {
-  GridNavigationInputs,
-  GridNavigationState,
-} from '../navigation/grid-navigation-state';
-import type { GridController } from './grid.controller';
-import { GridCellState } from './gridcell';
+import { FocusState } from '../focus/focus-state';
+import { GridNavigationState } from '../navigation/grid-navigation-state';
+import type { GridController } from './grid-controller';
+import { GridCellState } from './gridcell-state';
 
 export interface GridCoordinate {
   row: number;
   col: number;
 }
 
-export type GridInputs<T extends GridCellState> = GridNavigationInputs<T> &
-  FocusInputs<T>;
+export interface GridInputs<T extends GridCellState> {
+  readonly wrap: Signal<boolean>;
+  readonly cells: Signal<T[][]>;
+  readonly skipDisabled: Signal<boolean>;
+  readonly currentGridCoordinate: WritableSignal<GridCoordinate>;
+  readonly rovingFocus: Signal<boolean>;
+}
 
 export class GridState<T extends GridCellState> {
-  wrap: Signal<boolean>;
-  rovingFocus: Signal<boolean>;
-  cells: Signal<T[][]>;
-  skipDisabled: Signal<boolean>;
-  currentGridCoordinate: WritableSignal<GridCoordinate>;
-  currentCell: Signal<T>;
-  focusedCell: Signal<T | undefined>;
-  activeCell: Signal<T | undefined>;
-  items: Signal<T[]>;
-  currentIndex: WritableSignal<number>;
+  readonly wrap: Signal<boolean>;
+  readonly rovingFocus: Signal<boolean>;
+  readonly cells: Signal<T[][]>;
+  readonly skipDisabled: Signal<boolean>;
+  readonly currentGridCoordinate: WritableSignal<GridCoordinate>;
+  readonly currentCell: Signal<T>;
+  readonly focusedCell: Signal<T | undefined>;
+  readonly activeCell: Signal<T | undefined>;
+  readonly items: Signal<T[]>;
+  readonly currentIndex: WritableSignal<number>;
 
-  tabindex: Signal<number>;
+  readonly tabindex: Signal<number>;
 
-  inWidgetMode = computed(() => !!this.currentCell()?.inWidgetMode());
+  readonly inWidgetMode = computed(() => !!this.currentCell()?.inWidgetMode());
 
-  rowcount = computed(() => this.cells().length);
+  readonly rowcount = computed(() => this.cells().length);
 
-  colcount = computed(() => {
+  readonly colcount = computed(() => {
     if (!this.cells().length) {
       return 0;
     }
@@ -46,9 +48,10 @@ export class GridState<T extends GridCellState> {
     return colcount;
   });
 
-  focusState: FocusState<T>;
-  navigationState: GridNavigationState<T>;
-  controller?: GridController<T>;
+  readonly focusState: FocusState<T>;
+  readonly navigationState: GridNavigationState<T>;
+
+  private controller?: GridController<T>;
 
   constructor(inputs: GridInputs<T>) {
     this.wrap = inputs.wrap;
@@ -85,27 +88,21 @@ export class GridState<T extends GridCellState> {
     );
   }
 
-  private async getController() {
+  async getController() {
     if (!this.controller) {
-      const { GridController } = await import('./grid.controller');
+      const { GridController } = await import('./grid-controller');
       this.controller = new GridController(this);
     }
     return this.controller;
   }
 
-  load() {
-    this.getController();
-    this.currentCell()?.load();
-    this.navigationState.getController();
+  async handleKeydown(event: KeyboardEvent) {
+    const controller = await this.getController();
+    controller.handleKeydown(event);
   }
 
-  async onKeyDown(event: KeyboardEvent) {
+  async handleClick(event: MouseEvent) {
     const controller = await this.getController();
-    controller.onKeyDown(event);
-  }
-
-  async onPointerDown(event: PointerEvent) {
-    const controller = await this.getController();
-    controller.onPointerDown(event);
+    controller.handleClick(event);
   }
 }
