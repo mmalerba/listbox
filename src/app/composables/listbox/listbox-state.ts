@@ -4,11 +4,11 @@ import {
   ListNavigationInputs,
   ListNavigationState,
 } from '../navigation/list-navigation-state';
-import { OptionState } from '../option/option-state';
 import { SelectionInputs, SelectionState } from '../selection/selection-state';
 import { TypeAheadInputs, TypeAheadState } from '../typeahead/typeahead-state';
 import type { Orientation } from '../types';
 import { ListboxController, ListboxSelectionMode } from './listbox-controller';
+import { OptionState } from './option-state';
 
 export type ListboxInputs<T extends OptionState> = {
   orientation: Signal<Orientation>;

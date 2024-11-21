@@ -1,5 +1,5 @@
 import { computed, Signal } from '@angular/core';
-import { ListboxState } from '../listbox/listbox-state';
+import { ListboxState } from './listbox-state';
 
 export interface OptionInputs {
   readonly element: HTMLElement;
