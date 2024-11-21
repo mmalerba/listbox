@@ -1,7 +1,7 @@
 import { computed, Signal, WritableSignal } from '@angular/core';
 import { FocusState } from '../focus/focus-state';
 import { ListNavigationState } from '../navigation/list-navigation-state';
-import { GridState, RowCol } from './grid';
+import { GridCoordinate, GridState } from './grid';
 import { WidgetState } from './widget';
 
 export interface GridCellInputs {
@@ -29,9 +29,7 @@ export class GridCellState {
   navigationState: ListNavigationState<WidgetState>;
 
   id = computed(() => `gridcell-${counter++}`);
-  index = computed(() => getIndex(this.grid.cells(), this.id()));
-  rowindex = computed(() => this.index().rowindex);
-  colindex = computed(() => this.index().colindex);
+  coordinate = computed(() => getIndex(this.grid.cells(), this.id()));
   tabindex = computed(() => (this.focused() ? 0 : -1));
 
   inWidgetMode = computed(
@@ -109,12 +107,12 @@ export class GridCellState {
   }
 }
 
-function getIndex(grid: GridCellState[][], id: string): RowCol {
-  const takenCells: RowCol[] = [];
+function getIndex(grid: GridCellState[][], id: string): GridCoordinate {
+  const takenCells: GridCoordinate[] = [];
 
   const getNextCol = (row: number, col: number) => {
     for (let i = 0; i < takenCells.length; i++) {
-      if (takenCells[i].rowindex === row && takenCells[i].colindex === col) {
+      if (takenCells[i].row === row && takenCells[i].col === col) {
         col++;
         takenCells.slice(i--, 1);
       }
@@ -123,13 +121,10 @@ function getIndex(grid: GridCellState[][], id: string): RowCol {
   };
 
   const markCellsAsTaken = (cell: GridCellState) => {
-    for (
-      let i = cell.rowindex() + 1;
-      i < cell.rowindex() + cell.rowspan();
-      i++
-    ) {
-      for (let j = cell.colindex(); j < cell.colindex() + cell.colspan(); j++) {
-        takenCells.push({ rowindex: i, colindex: j });
+    const { row, col } = cell.coordinate();
+    for (let i = row + 1; i < row + cell.rowspan(); i++) {
+      for (let j = col; j < col + cell.colspan(); j++) {
+        takenCells.push({ row: i, col: j });
       }
     }
   };
@@ -145,7 +140,7 @@ function getIndex(grid: GridCellState[][], id: string): RowCol {
       colindex = getNextCol(rowindex, colindex);
 
       if (cell.id() === id) {
-        return { rowindex: rowindex, colindex: colindex };
+        return { row: rowindex, col: colindex };
       }
 
       colindex += cell.colspan();
@@ -156,5 +151,5 @@ function getIndex(grid: GridCellState[][], id: string): RowCol {
     }
   }
 
-  return { rowindex: 0, colindex: 0 };
+  return { row: 0, col: 0 };
 }

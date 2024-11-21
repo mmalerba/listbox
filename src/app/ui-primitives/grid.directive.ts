@@ -1,5 +1,5 @@
 import { computed, contentChildren, Directive, model } from '@angular/core';
-import { GridState, RowCol } from '../composables/grid/grid';
+import { GridCoordinate, GridState } from '../composables/grid/grid';
 import { Row } from './row.directive';
 
 @Directive({
@@ -19,7 +19,7 @@ export class Grid {
   wrap = model<boolean>(false);
   rovingFocus = model<boolean>(true);
   skipDisabled = model<boolean>(false);
-  currentIndex = model<RowCol>({ rowindex: 0, colindex: 0 });
+  currentGridCoordinate = model<GridCoordinate>({ row: 0, col: 0 });
 
   state: GridState;
   rows = contentChildren(Row, { descendants: true });

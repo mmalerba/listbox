@@ -1,12 +1,12 @@
-import { computed, Signal, WritableSignal } from "@angular/core";
-import { GridCellState } from "./gridcell";
-import { Focus2DState } from "../focus/focus-2d";
-import { Navigation2DState } from "../navigation/navigation-2d";
-import type { GridController } from "./grid.controller";
+import { computed, linkedSignal, Signal, WritableSignal } from '@angular/core';
+import { FocusState } from '../focus/focus-state';
+import { GridNavigationState } from '../navigation/grid-navigation-state';
+import type { GridController } from './grid.controller';
+import { GridCellState } from './gridcell';
 
-export interface RowCol {
-  rowindex: number;
-  colindex: number;
+export interface GridCoordinate {
+  row: number;
+  col: number;
 }
 
 export interface GridInputs {
@@ -14,7 +14,7 @@ export interface GridInputs {
   rovingFocus: Signal<boolean>;
   cells: Signal<GridCellState[][]>;
   skipDisabled: WritableSignal<boolean>;
-  currentIndex: WritableSignal<RowCol>;
+  currentGridCoordinate: WritableSignal<GridCoordinate>;
 }
 
 export class GridState {
@@ -22,14 +22,16 @@ export class GridState {
   rovingFocus: Signal<boolean>;
   cells: Signal<GridCellState[][]>;
   skipDisabled: WritableSignal<boolean>;
-  currentIndex: WritableSignal<RowCol>;
+  currentGridCoordinate: WritableSignal<GridCoordinate>;
   currentCell: Signal<GridCellState>;
   focusedCell: Signal<GridCellState | void>;
   activeCell: Signal<GridCellState | void>;
+  items: Signal<GridCellState[]>;
+  currentIndex: WritableSignal<number>;
 
   tabindex: Signal<number>;
 
-  inWidgetMode = computed(() => this.currentCell().inWidgetMode());
+  inWidgetMode = computed(() => !!this.currentCell()?.inWidgetMode());
 
   rowcount = computed(() => this.cells().length);
 
@@ -46,8 +48,8 @@ export class GridState {
     return colcount;
   });
 
-  focusState: Focus2DState<GridCellState>;
-  navigationState: Navigation2DState<GridCellState>;
+  focusState: FocusState<GridCellState>;
+  navigationState: GridNavigationState<GridCellState>;
   controller: GridController | null = null;
 
   constructor(inputs: GridInputs) {
@@ -55,20 +57,34 @@ export class GridState {
     this.cells = inputs.cells;
     this.rovingFocus = inputs.rovingFocus;
     this.skipDisabled = inputs.skipDisabled;
-    this.currentIndex = inputs.currentIndex;
+    this.currentGridCoordinate = inputs.currentGridCoordinate;
 
-    this.focusState = new Focus2DState(inputs);
-
-    this.navigationState = new Navigation2DState({
+    this.navigationState = new GridNavigationState({
       ...inputs,
       rowcount: this.rowcount,
       colcount: this.colcount,
     });
 
-    this.tabindex = this.focusState.tabindex;
     this.currentCell = this.navigationState.currentCell;
-    this.focusedCell = this.focusState.focusedCell;
-    this.activeCell = this.focusState.activeCell;
+
+    this.items = computed(() => this.cells().flat());
+    this.currentIndex = linkedSignal(() =>
+      this.items().indexOf(this.currentCell())
+    );
+
+    this.focusState = new FocusState({
+      ...inputs,
+      items: this.items,
+      currentIndex: this.currentIndex,
+    });
+
+    this.tabindex = this.focusState.tabindex;
+    this.focusedCell = computed(
+      () => this.items()[this.focusState.focusIndex()]
+    );
+    this.activeCell = computed(
+      () => this.items()[this.focusState.activeIndex()]
+    );
   }
 
   private async getController() {
@@ -81,7 +97,7 @@ export class GridState {
 
   load() {
     this.getController();
-    this.currentCell().load();
+    this.currentCell()?.load();
     this.navigationState.getController();
   }
 

@@ -1,74 +1,74 @@
 import { computed, Signal, WritableSignal } from '@angular/core';
-import type { Navigation2DController } from './navigation-2d.controller';
-import { RowCol } from '../grid/grid';
+import type { GridCoordinate } from '../grid/grid';
+import type { GridNavigationController } from './grid-navigation-controller';
 
-export interface Cell {
-  index: Signal<RowCol>;
-  rowindex: Signal<number>;
-  colindex: Signal<number>;
+export interface GridNavigationCellInputs {
+  coordinate: Signal<GridCoordinate>;
   rowspan: Signal<number>;
   colspan: Signal<number>;
   disabled: Signal<boolean>;
 }
 
-export interface Navigation2DInputs<T extends Cell> {
+export interface GridNavigationInputs<T extends GridNavigationCellInputs> {
   wrap: Signal<boolean>;
   cells: Signal<T[][]>;
   rowcount: Signal<number>;
   colcount: Signal<number>;
   skipDisabled: Signal<boolean>;
-  currentIndex: WritableSignal<RowCol>;
+  currentGridCoordinate: WritableSignal<GridCoordinate>;
 }
 
-export class Navigation2DState<T extends Cell> {
+export class GridNavigationState<T extends GridNavigationCellInputs> {
   wrap: Signal<boolean>;
   cells: Signal<T[][]>;
   skipDisabled: Signal<boolean>;
-  currentIndex: WritableSignal<RowCol>;
+  currentGridCoordinate: WritableSignal<GridCoordinate>;
   rowcount: Signal<number>;
   colcount: Signal<number>;
 
-  currentCell = computed(() => this.getCell(this.currentIndex())!);
+  currentCell = computed(() => this.getCellAt(this.currentGridCoordinate())!);
 
-  private controller: Navigation2DController<T> | null = null;
+  private controller: GridNavigationController<T> | null = null;
 
   async getController() {
     if (this.controller === null) {
-      const { Navigation2DController } = await import(
-        './navigation-2d.controller'
+      const { GridNavigationController } = await import(
+        './grid-navigation-controller'
       );
-      this.controller = new Navigation2DController(this);
+      this.controller = new GridNavigationController(this);
     }
     return this.controller;
   }
 
-  constructor(inputs: Navigation2DInputs<T>) {
+  constructor(inputs: GridNavigationInputs<T>) {
     this.wrap = inputs.wrap;
     this.cells = inputs.cells;
     this.skipDisabled = inputs.skipDisabled;
-    this.currentIndex = inputs.currentIndex;
+    this.currentGridCoordinate = inputs.currentGridCoordinate;
     this.rowcount = inputs.rowcount;
     this.colcount = inputs.colcount;
   }
 
-  getCell(index: RowCol): T | void {
+  getCellAt(coordinate: GridCoordinate): T | undefined {
     for (const row of this.cells()) {
       for (const cell of row) {
+        const cellCoordinate = cell.coordinate();
         if (
-          index.rowindex >= cell.rowindex() &&
-          index.rowindex <= cell.rowindex() + cell.rowspan() - 1 &&
-          index.colindex >= cell.colindex() &&
-          index.colindex <= cell.colindex() + cell.colspan() - 1
+          coordinate.row >= cellCoordinate.row &&
+          coordinate.row <= cellCoordinate.row + cell.rowspan() - 1 &&
+          coordinate.col >= cellCoordinate.col &&
+          coordinate.col <= cellCoordinate.col + cell.colspan() - 1
         ) {
           return cell;
         }
       }
     }
+    return undefined;
   }
 
-  async navigateTo(index: RowCol) {
+  async navigateTo(coordinate: GridCoordinate) {
     const controller = await this.getController();
-    controller.navigateTo(index);
+    controller.navigateTo(coordinate);
   }
 
   async navigateRight() {

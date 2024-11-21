@@ -16,14 +16,17 @@ export class GridController {
       const cellEl = event.target.closest('[role="gridcell"]');
 
       if (cellEl) {
-        const cell = this.state.navigationState.cells().flat().find((i) => i.id() === cellEl.id)!;
+        const cell = this.state.navigationState
+          .cells()
+          .flat()
+          .find((i) => i.id() === cellEl.id)!;
 
         if (cell.disabled() && this.state.skipDisabled()) {
           return;
         }
 
         const widgetEl = event.target.closest('.widget');
-        this.state.navigationState.navigateTo(cell.index());
+        this.state.navigationState.navigateTo(cell.coordinate());
 
         if (widgetEl) {
           const widget = cell.widgets().find((w) => w.id() === widgetEl.id)!;
