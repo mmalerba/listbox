@@ -1,9 +1,9 @@
 import { computed } from '@angular/core';
-import { KeyboardEventManager } from '../event-manager/keyboard-event-manager';
+import { KeyboardEventManager } from '../../event-manager/keyboard-event-manager';
 import {
   MouseButton,
   MouseEventManager,
-} from '../event-manager/mouse-event-manager';
+} from '../../event-manager/mouse-event-manager';
 import { GridNavigationController } from '../navigation/grid-navigation-controller';
 import { ListNavigationController } from '../navigation/list-navigation-controller';
 import { GridState } from './grid-state';

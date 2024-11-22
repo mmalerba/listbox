@@ -1,0 +1,65 @@
+:host {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+}
+
+td {
+  width: 200px;
+  height: 200px;
+  border: 1px solid black;
+  border-collapse: collapse;
+  background-color: white;
+  text-align: center;
+}
+
+td[aria-disabled="true"] {
+  background-color: lightgrey;
+}
+
+td[tabindex="0"][aria-disabled="true"]:focus {
+  background-color: lightgrey;
+}
+
+td[tabindex="0"]:focus {
+  outline: -webkit-focus-ring-color auto 1px;
+  background-color: aliceblue;
+}
+
+.scroll-container {
+  overflow: scroll;
+  width: fit-content;
+  border: 1px solid black;
+}
+
+.table-example {
+  padding: 1rem;
+  background-color: lightgrey;
+  border: 1px solid black;
+}
+
+div[widget] {
+  border: 1px solid black;
+  padding: 1rem;
+  display: inline-block;
+}
+
+div[widget][aria-disabled="true"] {
+  background-color: lightgrey;
+}
+
+td[aria-disabled="true"] div[widget][aria-disabled="true"] {
+  background-color: darkgrey;
+}
+
+.multi-widget-wrapper {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+}
+
+.multi-widget-row {
+  display: flex;
+  gap: 1rem;
+}

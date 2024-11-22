@@ -1,6 +1,9 @@
 import { computed, contentChildren, Directive, model } from '@angular/core';
-import { GridCoordinate, GridState } from '../composables/grid/grid-state';
-import { GridCellState } from '../composables/grid/gridcell-state';
+import {
+  GridCoordinate,
+  GridState,
+} from '../primitives/composables/grid/grid-state';
+import { GridCellState } from '../primitives/composables/grid/gridcell-state';
 import { Row } from './row.directive';
 
 @Directive({

@@ -1,0 +1,113 @@
+<div class="table-example">
+  <div class="scroll-container">
+    <table [wrap]="true" [skipDisabled]="true" grid>
+      <tr row>
+        <td gridcell></td>
+        <td [disabled]="true" gridcell></td>
+        <td [disabled]="true" gridcell></td>
+        <td gridcell></td>
+      </tr>
+      <tr row>
+        <td [disabled]="true" gridcell></td>
+        <td [rowspan]="2" [colspan]="2" gridcell></td>
+        <td [disabled]="true" gridcell></td>
+      </tr>
+      <tr row>
+        <td [disabled]="true" gridcell></td>
+        <td [disabled]="true" gridcell></td>
+      </tr>
+      <tr row>
+        <td gridcell></td>
+        <td [disabled]="true" gridcell></td>
+        <td [disabled]="true" gridcell></td>
+        <td gridcell></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="table-example">
+  <div class="scroll-container">
+    <table [wrap]="true" [skipDisabled]="true" grid>
+      <tr row>
+        <td gridcell>
+          <button widget>Click me!</button>
+        </td>
+        <td gridcell>
+          <label>Check me: </label>
+          <input type="checkbox" widget />
+        </td>
+        <td gridcell>
+          <input widget [editable]="true" />
+        </td>
+        <td gridcell>Empty cell</td>
+      </tr>
+      <tr row>
+        <td [colspan]="2" gridcell>
+          <div class="multi-widget-wrapper">
+            <div class="multi-widget-row">
+              <div widget></div>
+              <div widget></div>
+              <div widget></div>
+              <div widget></div>
+              <div [disabled]="true" widget></div>
+              <div [disabled]="true" widget></div>
+            </div>
+            <div class="multi-widget-row">
+              <div [disabled]="true" widget></div>
+              <div [disabled]="true" widget></div>
+              <div widget></div>
+              <div widget></div>
+              <div [disabled]="true" widget></div>
+              <div [disabled]="true" widget></div>
+            </div>
+          </div>
+        </td>
+        <td gridcell>Empty cell</td>
+        <td gridcell>
+          <input type="date" [editable]="true" widget />
+        </td>
+      </tr>
+      <tr row>
+        <td gridcell>
+          <label>Radio button: </label>
+          <input type="radio" name="radio button example" widget />
+        </td>
+        <td gridcell>Empty cell</td>
+        <td gridcell>
+          <select [usesArrowKeys]="true" widget>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+            <option value="4">Option 4</option>
+            <option value="5">Option 5</option>
+            <option value="6">Option 6</option>
+          </select>
+        </td>
+        <td gridcell>
+          <a href="/" widget>Click me!</a>
+        </td>
+      </tr>
+      <tr row>
+        <td gridcell>Empty cell</td>
+        <td gridcell>
+          <p style="margin-top: 0">Radio group!</p>
+          <form>
+            <input type="radio" name="radio group 1" widget />
+            <input type="radio" name="radio group 1" widget />
+            <input type="radio" name="radio group 1" widget />
+            <input type="radio" name="radio group 1" widget />
+            <input type="radio" name="radio group 1" widget />
+            <input type="radio" name="radio group 1" widget />
+          </form>
+        </td>
+        <td gridcell>
+          <input type="color" [editable]="true" widget />
+        </td>
+        <td gridcell>
+          <input type="range" widget [usesArrowKeys]="true" />
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

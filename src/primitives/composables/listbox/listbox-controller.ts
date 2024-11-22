@@ -1,10 +1,10 @@
 import { computed } from '@angular/core';
-import { KeyboardEventManager } from '../event-manager/keyboard-event-manager';
+import { KeyboardEventManager } from '../../event-manager/keyboard-event-manager';
 import {
   MouseButton,
   MouseEventManager,
-} from '../event-manager/mouse-event-manager';
-import { ModifierKey } from '../event-manager/shared';
+} from '../../event-manager/mouse-event-manager';
+import { ModifierKey } from '../../event-manager/shared';
 import { ListNavigationController } from '../navigation/list-navigation-controller';
 import { SelectionController } from '../selection/selection-controller';
 import { TypeaheadController } from '../typeahead/typeahead-controller';
