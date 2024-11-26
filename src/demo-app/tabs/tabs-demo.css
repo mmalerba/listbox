@@ -1,0 +1,22 @@
+[role="tablist"] {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid black;
+}
+
+[role="tab"] {
+  list-style-type: none;
+  padding: 10px;
+  margin: 0 2px;
+  background-color: #eee;
+}
+
+[role="tab"]:focus {
+  background-color: #ddd;
+}
+
+[role="tabpanel"] {
+  padding: 20px;
+  background-color: #eee;
+}

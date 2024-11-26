@@ -10,6 +10,10 @@ export const routes: Routes = [
     loadComponent: () => import('./grid/grid-demo'),
   },
   {
+    path: 'tabs',
+    loadComponent: () => import('./tabs/tabs-demo'),
+  },
+  {
     path: '**',
     redirectTo: 'listbox',
   },
