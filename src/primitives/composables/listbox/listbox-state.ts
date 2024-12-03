@@ -66,4 +66,8 @@ export class ListboxState<T extends OptionState> {
     const controller = await this.getController();
     controller.handleClick(e);
   }
+
+  syncFocus() {
+    this.focusState.syncFocus();
+  }
 }

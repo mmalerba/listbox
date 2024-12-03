@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, input } from '@angular/core';
+import { Directive, ElementRef, inject, input } from '@angular/core';
 import { TabState } from '../primitives/composables/tabs/tab-state';
 import { Tablist } from './tablist.directive';
 
@@ -21,10 +21,5 @@ export class Tab {
 
   constructor() {
     this.state = new TabState(this);
-    effect(() => {
-      if (this.state.focused()) {
-        this.element.focus();
-      }
-    });
   }
 }

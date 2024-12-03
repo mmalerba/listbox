@@ -5,6 +5,7 @@ import { TabState } from './tab-state';
 import type { TablistController } from './tablist-controller';
 
 export interface TablistInputs<T extends TabState> {
+  readonly element: HTMLElement;
   readonly items: Signal<T[]>;
   readonly rovingFocus: Signal<boolean>;
   readonly currentIndex: WritableSignal<number>;
@@ -49,5 +50,9 @@ export class TablistState<T extends TabState> {
   async handleClick(e: MouseEvent) {
     const controller = await this.getController();
     controller.handleClick(e);
+  }
+
+  syncFocus() {
+    this.focusState.syncFocus();
   }
 }

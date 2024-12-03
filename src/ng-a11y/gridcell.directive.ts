@@ -2,7 +2,6 @@ import {
   computed,
   contentChildren,
   Directive,
-  effect,
   ElementRef,
   inject,
   model,
@@ -44,17 +43,5 @@ export class GridCell {
 
   constructor() {
     this.state = new GridCellState(this);
-
-    effect(() => {
-      if (this.state.focused()) {
-        this.element.focus();
-      }
-
-      if (this.state.active()) {
-        this.element.scrollIntoView({
-          block: 'nearest',
-        });
-      }
-    });
   }
 }

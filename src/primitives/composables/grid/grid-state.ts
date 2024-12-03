@@ -10,6 +10,7 @@ export interface GridCoordinate {
 }
 
 export interface GridInputs<T extends GridCellState> {
+  readonly element: HTMLElement;
   readonly wrap: Signal<boolean>;
   readonly cells: Signal<T[][]>;
   readonly skipDisabled: Signal<boolean>;
@@ -104,5 +105,9 @@ export class GridState<T extends GridCellState> {
   async handleClick(event: MouseEvent) {
     const controller = await this.getController();
     controller.handleClick(event);
+  }
+
+  syncFocus() {
+    this.focusState.syncFocus();
   }
 }

@@ -1,4 +1,12 @@
-import { computed, contentChildren, Directive, model } from '@angular/core';
+import {
+  computed,
+  contentChildren,
+  Directive,
+  effect,
+  ElementRef,
+  inject,
+  model,
+} from '@angular/core';
 import { ListboxSelectionMode } from '../primitives/composables/listbox/listbox-controller';
 import { ListboxState } from '../primitives/composables/listbox/listbox-state';
 import { Option } from './option.directive';
@@ -13,13 +21,14 @@ import { Option } from './option.directive';
     '[attr.aria-orientation]': 'state.orientation()',
     '[attr.aria-multiselection]': 'state.multiselection()',
     '[attr.aria-activedescendant]': 'state.activedescendant()',
-    '(focusin)': 'state.getController()',
     '(mouseenter)': 'state.getController()',
     '(keydown)': 'state.handleKeydown($event)',
     '(click)': 'state.handleClick($event)',
   },
 })
 export class Listbox {
+  readonly element: HTMLElement = inject(ElementRef).nativeElement;
+
   readonly wrap = model.required<boolean>();
   readonly vertical = model.required<boolean>();
   readonly selectionMode = model.required<ListboxSelectionMode>();
@@ -46,4 +55,8 @@ export class Listbox {
   );
 
   readonly state = new ListboxState(this);
+
+  constructor() {
+    effect(() => this.state.syncFocus());
+  }
 }

@@ -1,4 +1,12 @@
-import { computed, contentChildren, Directive, model } from '@angular/core';
+import {
+  computed,
+  contentChildren,
+  Directive,
+  effect,
+  ElementRef,
+  inject,
+  model,
+} from '@angular/core';
 import { TablistState } from '../primitives/composables/tabs/tablist-state';
 import { Tab } from './tab.directive';
 
@@ -14,6 +22,8 @@ import { Tab } from './tab.directive';
   },
 })
 export class Tablist {
+  readonly element: HTMLElement = inject(ElementRef).nativeElement;
+
   readonly currentIndex = model(0);
   readonly tabs = contentChildren(Tab);
   readonly state = new TablistState({
@@ -22,4 +32,8 @@ export class Tablist {
     items: computed(() => this.tabs().map((t) => t.state)),
   });
   readonly currentTab = this.state.currentTab;
+
+  constructor() {
+    effect(() => this.state.syncFocus());
+  }
 }

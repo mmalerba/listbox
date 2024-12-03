@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, model } from '@angular/core';
+import { Directive, ElementRef, inject, model } from '@angular/core';
 import { OptionState } from '../primitives/composables/listbox/option-state';
 import { Listbox } from './listbox.directive';
 
@@ -28,15 +28,5 @@ export class Option {
 
   constructor() {
     this.composable = new OptionState(this);
-    effect(() => {
-      if (this.composable.focused()) {
-        this.element.focus();
-      }
-      if (this.composable.active()) {
-        this.element.scrollIntoView({
-          block: 'nearest',
-        });
-      }
-    });
   }
 }

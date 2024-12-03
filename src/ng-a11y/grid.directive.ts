@@ -1,4 +1,12 @@
-import { computed, contentChildren, Directive, model } from '@angular/core';
+import {
+  computed,
+  contentChildren,
+  Directive,
+  effect,
+  ElementRef,
+  inject,
+  model,
+} from '@angular/core';
 import {
   GridCoordinate,
   GridState,
@@ -14,12 +22,14 @@ import { Row } from './row.directive';
     role: 'grid',
     '[attr.aria-rowcount]': 'state.rowcount()',
     '[attr.aria-colcount]': 'state.colcount()',
-    '(focusin)': 'state.load()',
+    '(focusin)': 'state.getController()',
     '(keydown)': 'state.handleKeydown($event)',
     '(click)': 'state.handleClick($event)',
   },
 })
 export class Grid {
+  readonly element: HTMLElement = inject(ElementRef).nativeElement;
+
   wrap = model<boolean>(false);
   rovingFocus = model<boolean>(true);
   skipDisabled = model<boolean>(false);
@@ -31,5 +41,7 @@ export class Grid {
 
   constructor() {
     this.state = new GridState(this);
+
+    effect(() => this.state.syncFocus());
   }
 }
