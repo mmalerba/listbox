@@ -17,7 +17,7 @@ export class TablistState<T extends TabState> {
 
   readonly tabindex = computed(() => this.focusState.tabindex());
   readonly currentTab = computed(
-    () => this.items()[this.focusState.focusIndex()]
+    () => this.items()[this.focusState.focusIndex()],
   );
 
   private controller?: TablistController<T>;

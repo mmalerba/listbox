@@ -24,15 +24,15 @@ export class TablistController<T extends TabState> {
       const index = this.state
         .items()
         .findIndex(
-          (o) => o.element.contains(event.target as Node) && !o.disabled()
+          (o) => o.element.contains(event.target as Node) && !o.disabled(),
         );
       this.navigationController.navigateTo(index);
-    }
+    },
   );
 
   constructor(private readonly state: TablistState<T>) {
     this.navigationController = new ListNavigationController(
-      state.navigationState
+      state.navigationState,
     );
   }
 

@@ -37,7 +37,7 @@ export class GridNavigationController<T extends GridNavigationCellInputs> {
       row: prevIndex.row,
       col: Math.min(
         this.state.colcount() - 1,
-        prevCell.coordinate().col + prevCell.colspan()
+        prevCell.coordinate().col + prevCell.colspan(),
       ),
     };
     const nextCell = this.state.getCellAt(nextIndex)!;
@@ -76,7 +76,7 @@ export class GridNavigationController<T extends GridNavigationCellInputs> {
     const nextIndex = {
       row: Math.min(
         this.state.rowcount() - 1,
-        prevCell.coordinate().row + prevCell.rowspan()
+        prevCell.coordinate().row + prevCell.rowspan(),
       ),
       col: prevIndex.col,
     };

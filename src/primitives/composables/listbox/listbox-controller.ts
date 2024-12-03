@@ -31,7 +31,7 @@ export class ListboxController<T extends OptionState> {
       if (this.state.selectionMode() === ListboxSelectionMode.FollowFocus) {
         return this.getFollowFocusMultiSelectionKeydownManager(
           previousKey,
-          nextKey
+          nextKey,
         );
       }
       return this.getExplicitMultiSelectionKeydownManager(previousKey, nextKey);
@@ -39,12 +39,12 @@ export class ListboxController<T extends OptionState> {
       if (this.state.selectionMode() === ListboxSelectionMode.Explicit) {
         return this.getExplicitSingleSelectionKeydownManager(
           previousKey,
-          nextKey
+          nextKey,
         );
       }
       return this.getFollowFocusSingleSelectionKeydownManager(
         previousKey,
-        nextKey
+        nextKey,
       );
     }
   });
@@ -52,12 +52,12 @@ export class ListboxController<T extends OptionState> {
   private readonly clickManager = computed(() =>
     this.state.multiselection()
       ? this.getMultiSelectionClickManager()
-      : this.getSingleSelectionClickManager()
+      : this.getSingleSelectionClickManager(),
   );
 
   constructor(private readonly state: ListboxState<T>) {
     this.navigationController = new ListNavigationController(
-      state.navigationState
+      state.navigationState,
     );
     this.selectionController = new SelectionController(state.selectionState);
     this.typeaheadController = new TypeaheadController(state.typeaheadState);
@@ -73,7 +73,7 @@ export class ListboxController<T extends OptionState> {
 
   private getFollowFocusSingleSelectionKeydownManager(
     previousKey: string,
-    nextKey: string
+    nextKey: string,
   ) {
     return new KeyboardEventManager()
       .on(previousKey, () => {
@@ -97,7 +97,7 @@ export class ListboxController<T extends OptionState> {
         (event) => {
           this.typeaheadController.search(event.key);
           this.selectionController.select();
-        }
+        },
       )
       .on(
         ModifierKey.Shift,
@@ -105,13 +105,13 @@ export class ListboxController<T extends OptionState> {
         (event) => {
           this.typeaheadController.search(event.key);
           this.selectionController.select();
-        }
+        },
       );
   }
 
   private getExplicitSingleSelectionKeydownManager(
     previousKey: string,
-    nextKey: string
+    nextKey: string,
   ) {
     return new KeyboardEventManager()
       .on(previousKey, () => {
@@ -133,20 +133,20 @@ export class ListboxController<T extends OptionState> {
         (key) => this.typeaheadController.isValidCharacter(key),
         (event) => {
           this.typeaheadController.search(event.key);
-        }
+        },
       )
       .on(
         ModifierKey.Shift,
         (key) => this.typeaheadController.isValidCharacter(key),
         (event) => {
           this.typeaheadController.search(event.key);
-        }
+        },
       );
   }
 
   private getExplicitMultiSelectionKeydownManager(
     previousKey: string,
-    nextKey: string
+    nextKey: string,
   ) {
     return new KeyboardEventManager()
       .on(previousKey, () => {
@@ -182,7 +182,7 @@ export class ListboxController<T extends OptionState> {
       .on(ModifierKey.Ctrl | ModifierKey.Shift, 'End', () => {
         this.selectionController.selectRange(
           this.state.currentIndex(),
-          this.state.items().length - 1
+          this.state.items().length - 1,
         );
         this.navigationController.navigateLast();
       })
@@ -193,20 +193,20 @@ export class ListboxController<T extends OptionState> {
         (key) => this.typeaheadController.isValidCharacter(key),
         (event) => {
           this.typeaheadController.search(event.key);
-        }
+        },
       )
       .on(
         ModifierKey.Shift,
         (key) => this.typeaheadController.isValidCharacter(key),
         (event) => {
           this.typeaheadController.search(event.key);
-        }
+        },
       );
   }
 
   private getFollowFocusMultiSelectionKeydownManager(
     previousKey: string,
-    nextKey: string
+    nextKey: string,
   ) {
     return new KeyboardEventManager()
       .on(previousKey, () => {
@@ -256,7 +256,7 @@ export class ListboxController<T extends OptionState> {
       .on(ModifierKey.Ctrl | ModifierKey.Shift, 'End', () => {
         this.selectionController.selectRange(
           this.state.currentIndex(),
-          this.state.items().length - 1
+          this.state.items().length - 1,
         );
         this.navigationController.navigateLast();
       })
@@ -269,7 +269,7 @@ export class ListboxController<T extends OptionState> {
           this.typeaheadController.search(event.key);
           this.selectionController.deselectAll();
           this.selectionController.select();
-        }
+        },
       )
       .on(
         ModifierKey.Shift,
@@ -278,7 +278,7 @@ export class ListboxController<T extends OptionState> {
           this.typeaheadController.search(event.key);
           this.selectionController.deselectAll();
           this.selectionController.select();
-        }
+        },
       );
   }
 
@@ -287,7 +287,7 @@ export class ListboxController<T extends OptionState> {
       const index = this.state
         .items()
         .findIndex(
-          (o) => o.element.contains(event.target as Node) && !o.disabled()
+          (o) => o.element.contains(event.target as Node) && !o.disabled(),
         );
       this.navigationController.navigateTo(index);
       this.selectionController.select();
@@ -300,7 +300,7 @@ export class ListboxController<T extends OptionState> {
         const index = this.state
           .items()
           .findIndex(
-            (o) => o.element.contains(event.target as Node) && !o.disabled()
+            (o) => o.element.contains(event.target as Node) && !o.disabled(),
           );
         this.navigationController.navigateTo(index);
         this.selectionController.toggle();
@@ -309,7 +309,7 @@ export class ListboxController<T extends OptionState> {
         const index = this.state
           .items()
           .findIndex(
-            (o) => o.element.contains(event.target as Node) && !o.disabled()
+            (o) => o.element.contains(event.target as Node) && !o.disabled(),
           );
         this.navigationController.navigateTo(index);
         this.selectionController.selectContiguousRange();

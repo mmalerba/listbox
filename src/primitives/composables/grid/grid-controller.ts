@@ -14,7 +14,7 @@ export class GridController<T extends GridCellState> {
   private readonly currentCellNavigationController = computed(() =>
     this.state.currentCell().hasNavigation()
       ? new ListNavigationController(this.state.currentCell().navigationState)
-      : null
+      : null,
   );
 
   private keydownManager = new KeyboardEventManager()
@@ -26,7 +26,7 @@ export class GridController<T extends GridCellState> {
     .on('ArrowRight', () => this.onArrowRight())
     .on(
       (key) => /^[a-zA-z0-9]$/.test(key),
-      () => this.onAlphanumeric()
+      () => this.onAlphanumeric(),
     );
 
   private readonly clickManager = new MouseEventManager().on(
@@ -49,12 +49,12 @@ export class GridController<T extends GridCellState> {
         this.currentCellNavigationController()?.navigateTo(widget.index());
       }
       return true;
-    }
+    },
   );
 
   constructor(readonly state: GridState<T>) {
     this.navigationController = new GridNavigationController(
-      state.navigationState
+      state.navigationState,
     );
   }
 

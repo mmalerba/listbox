@@ -70,7 +70,7 @@ export class GridState<T extends GridCellState> {
 
     this.items = computed(() => this.cells().flat());
     this.currentIndex = linkedSignal(() =>
-      this.items().indexOf(this.currentCell())
+      this.items().indexOf(this.currentCell()),
     );
 
     this.focusState = new FocusState({
@@ -81,10 +81,10 @@ export class GridState<T extends GridCellState> {
 
     this.tabindex = this.focusState.tabindex;
     this.focusedCell = computed(
-      () => this.items()[this.focusState.focusIndex()]
+      () => this.items()[this.focusState.focusIndex()],
     );
     this.activeCell = computed(
-      () => this.items()[this.focusState.activeIndex()]
+      () => this.items()[this.focusState.activeIndex()],
     );
   }
 

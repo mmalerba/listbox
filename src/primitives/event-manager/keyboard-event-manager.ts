@@ -27,14 +27,14 @@ export class KeyboardEventManager {
     handler:
       | ((event: KeyboardEvent) => void)
       | ((event: KeyboardEvent) => boolean),
-    options?: Partial<EventHandlerOptions>
+    options?: Partial<EventHandlerOptions>,
   ): KeyboardEventManager;
   on(
     key: string | ((key: string) => boolean),
     handler:
       | ((event: KeyboardEvent) => void)
       | ((event: KeyboardEvent) => boolean),
-    options?: Partial<EventHandlerOptions>
+    options?: Partial<EventHandlerOptions>,
   ): KeyboardEventManager;
   on(...args: any[]) {
     let modifiers = 0;

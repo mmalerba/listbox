@@ -28,7 +28,7 @@ export class TabpanelState<T extends TabState> {
 
   async handleMutation(
     mutations: MutationRecord[],
-    observer: MutationObserver
+    observer: MutationObserver,
   ) {
     const controller = await this.getController();
     controller.handleMutation(mutations, observer);

@@ -19,21 +19,21 @@ export class OptionState {
 
   readonly id = computed(() => `cdk-uuid-${counter++}`);
   readonly setsize = computed(
-    () => this.listbox.navigationState.items().length
+    () => this.listbox.navigationState.items().length,
   );
   readonly posinset = computed(() =>
     this.listbox.navigationState
       .items()
-      .findIndex((item) => item.id() === this.id())
+      .findIndex((item) => item.id() === this.id()),
   );
   readonly focused = computed(
-    () => this.listbox.focusState.focusIndex() === this.posinset()
+    () => this.listbox.focusState.focusIndex() === this.posinset(),
   );
   readonly active = computed(
-    () => this.listbox.focusState.activeIndex() === this.posinset()
+    () => this.listbox.focusState.activeIndex() === this.posinset(),
   );
   readonly selected = computed(() =>
-    this.listbox.selectionState.selectedIndices().includes(this.posinset())
+    this.listbox.selectionState.selectedIndices().includes(this.posinset()),
   );
   readonly tabindex = computed(() => (this.focused() ? 0 : -1));
 

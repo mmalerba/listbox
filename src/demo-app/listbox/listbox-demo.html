@@ -13,17 +13,17 @@
     [typeaheadDelay]="typeaheadDelay"
     [typeaheadMatcher]="typeaheadMatcher"
   >
-    @for(state of states; track state) {
-    <li option [searchTerm]="state">
-      <span>{{ state }}</span>
-      <span class="checkmark">✓</span>
-    </li>
+    @for (state of states; track state) {
+      <li option [searchTerm]="state">
+        <span>{{ state }}</span>
+        <span class="checkmark">✓</span>
+      </li>
     }
   </ul>
   @if (listbox.state.typeaheadState.query()) {
-  <span class="typeahead"
-    >{{ listbox.state.typeaheadState.query() | titlecase }}</span
-  >
+    <span class="typeahead">{{
+      listbox.state.typeaheadState.query() | titlecase
+    }}</span>
   }
 </div>
 
@@ -92,7 +92,7 @@
       [multiple]="multiselection"
     >
       @for (state of states; track state) {
-      <option [value]="$index">{{ state }}</option>
+        <option [value]="$index">{{ state }}</option>
       }
     </select>
   </div>

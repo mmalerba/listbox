@@ -18,10 +18,10 @@ export class TabState {
   readonly index = computed(() =>
     this.tablist.navigationState
       .items()
-      .findIndex((item) => item.id() === this.id())
+      .findIndex((item) => item.id() === this.id()),
   );
   readonly focused = computed(
-    () => this.tablist.focusState.focusIndex() === this.index()
+    () => this.tablist.focusState.focusIndex() === this.index(),
   );
   readonly tabindex = computed(() => (this.focused() ? 0 : -1));
 

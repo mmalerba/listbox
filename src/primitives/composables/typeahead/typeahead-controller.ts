@@ -20,7 +20,7 @@ export class TypeaheadController<T extends TypeAheadItemInputs> {
     const index = findIndexFrom(
       this.state.items(),
       (i) => i.searchTerm().toLowerCase().startsWith(this.state.query()),
-      startIndex
+      startIndex,
     );
 
     if (index !== -1) {
@@ -56,7 +56,7 @@ export class TypeaheadController<T extends TypeAheadItemInputs> {
 function findIndexFrom<T>(
   array: T[],
   predicate: (value: T, index: number, obj: T[]) => unknown,
-  startIndex = 0
+  startIndex = 0,
 ): number {
   for (let i = startIndex; i < array.length; i++) {
     if (predicate(array[i], i, array)) {

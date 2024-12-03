@@ -27,7 +27,7 @@ export class GridNavigationState<T extends GridNavigationCellInputs> {
   readonly colcount: Signal<number>;
 
   readonly currentCell = computed(
-    () => this.getCellAt(this.currentGridCoordinate())!
+    () => this.getCellAt(this.currentGridCoordinate())!,
   );
 
   private controller?: GridNavigationController<T>;

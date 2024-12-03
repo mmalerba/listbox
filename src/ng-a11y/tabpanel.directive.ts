@@ -27,7 +27,7 @@ export class Tabpanel {
     this.state.getController();
 
     this.mutationObserver = new MutationObserver((mutations, observer) =>
-      this.state.handleMutation(mutations, observer)
+      this.state.handleMutation(mutations, observer),
     );
 
     this.mutationObserver.observe(this.element, {

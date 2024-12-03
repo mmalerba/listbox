@@ -42,7 +42,7 @@ export class Listbox {
   readonly children = contentChildren(Option);
   readonly items = computed(() => this.children().map((c) => c.composable));
   readonly orientation = computed(() =>
-    this.vertical() ? 'vertical' : 'horizontal'
+    this.vertical() ? 'vertical' : 'horizontal',
   );
 
   readonly state = new ListboxState(this);

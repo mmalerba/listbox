@@ -52,12 +52,12 @@ export class SelectionController<T extends SelectionItemInputs> {
   selectRange(fromIndex: number, toIndex: number) {
     const upper = Math.min(
       Math.max(fromIndex, toIndex),
-      this.state.items().length - 1
+      this.state.items().length - 1,
     );
     const lower = Math.max(Math.min(fromIndex, toIndex), 0);
     const range = Array.from(
       { length: upper - lower + 1 },
-      (_, i) => lower + i
+      (_, i) => lower + i,
     );
     this.setSelection([...this.state.selectedIndices(), ...range]);
     this.state.lastSelected.set(toIndex);

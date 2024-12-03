@@ -29,12 +29,12 @@ export class MouseEventManager {
     modifiers: number,
     button: MouseButton,
     handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean),
-    options?: EventHandlerOptions
+    options?: EventHandlerOptions,
   ): MouseEventManager;
   on(
     button: MouseButton,
     handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean),
-    options?: EventHandlerOptions
+    options?: EventHandlerOptions,
   ): MouseEventManager;
   on(...args: any[]) {
     let modifiers = 0;

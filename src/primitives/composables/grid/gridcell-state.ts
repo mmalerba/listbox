@@ -36,7 +36,7 @@ export class GridCellState {
   readonly tabindex = computed(() => (this.focused() ? 0 : -1));
 
   readonly inWidgetMode = computed(
-    () => this.autofocusWidget() || this.widgetIndex() !== -1
+    () => this.autofocusWidget() || this.widgetIndex() !== -1,
   );
 
   readonly autofocusWidget = computed(() => {
