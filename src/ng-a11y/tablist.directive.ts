@@ -24,14 +24,14 @@ import { Tab } from './tab.directive';
 export class Tablist {
   readonly element: HTMLElement = inject(ElementRef).nativeElement;
 
-  readonly currentIndex = model(0);
+  readonly activeIndex = model(0);
   readonly tabs = contentChildren(Tab);
   readonly state = new TablistState({
     ...this,
     rovingFocus: computed(() => true),
     items: computed(() => this.tabs().map((t) => t.state)),
   });
-  readonly currentTab = this.state.currentTab;
+  readonly activeTab = this.state.activeTab;
 
   constructor() {
     effect(() => this.state.syncFocus());

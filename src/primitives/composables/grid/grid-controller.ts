@@ -11,11 +11,12 @@ import { GridCellState } from './gridcell-state';
 
 export class GridController<T extends GridCellState> {
   private readonly navigationController: GridNavigationController<T>;
-  private readonly currentCellNavigationController = computed(() =>
-    this.state.currentCell().hasNavigation()
-      ? new ListNavigationController(this.state.currentCell().navigationState)
-      : null,
-  );
+  private readonly activeCellNavigationController = computed(() => {
+    const activeCell = this.state.activeCell();
+    return activeCell?.hasNavigation()
+      ? new ListNavigationController(activeCell.navigationState)
+      : null;
+  });
 
   private keydownManager = new KeyboardEventManager()
     .on('Enter', () => this.onEnter())
@@ -46,7 +47,7 @@ export class GridController<T extends GridCellState> {
         .widgets()
         .find((w) => w.element.contains(event.target as Node));
       if (widget) {
-        this.currentCellNavigationController()?.navigateTo(widget.index());
+        this.activeCellNavigationController()?.navigateTo(widget.index());
       }
       return true;
     },
@@ -68,8 +69,8 @@ export class GridController<T extends GridCellState> {
 
   // TODO: Allow other chars with regexp similar to TypeAhead.
   private onAlphanumeric() {
-    const cell = this.state.currentCell();
-    if (cell.inWidgetMode()) {
+    const cell = this.state.activeCell();
+    if (!cell || cell.inWidgetMode()) {
       return false;
     }
 
@@ -82,9 +83,9 @@ export class GridController<T extends GridCellState> {
   }
 
   private onEnter() {
-    const cell = this.state.currentCell();
+    const cell = this.state.activeCell();
 
-    if (cell.disabled() || cell.inWidgetMode()) {
+    if (!cell || cell.disabled() || cell.inWidgetMode()) {
       return false;
     }
 
@@ -95,54 +96,61 @@ export class GridController<T extends GridCellState> {
   }
 
   private onEscape() {
-    this.state.currentCell().widgetIndex.set(-1);
+    const cell = this.state.activeCell();
+
+    if (!cell) {
+      return false;
+    }
+
+    cell.widgetIndex.set(-1);
+    return true;
   }
 
   private onArrowRight() {
     if (
       !this.state.inWidgetMode() ||
-      this.state.currentCell().autofocusWidget()
+      this.state.activeCell()?.autofocusWidget()
     ) {
       this.navigationController.navigateRight();
       return;
     }
 
-    this.currentCellNavigationController()?.navigateNext();
+    this.activeCellNavigationController()?.navigateNext();
   }
 
   private onArrowLeft() {
     if (
       !this.state.inWidgetMode() ||
-      this.state.currentCell().autofocusWidget()
+      this.state.activeCell()?.autofocusWidget()
     ) {
       this.navigationController.navigateLeft();
       return;
     }
 
-    this.currentCellNavigationController()?.navigatePrevious();
+    this.activeCellNavigationController()?.navigatePrevious();
   }
 
   private onArrowDown() {
     if (
       !this.state.inWidgetMode() ||
-      this.state.currentCell().autofocusWidget()
+      this.state.activeCell()?.autofocusWidget()
     ) {
       this.navigationController.navigateDown();
       return;
     }
 
-    this.currentCellNavigationController()?.navigateNext();
+    this.activeCellNavigationController()?.navigateNext();
   }
 
   private onArrowUp() {
     if (
       !this.state.inWidgetMode() ||
-      this.state.currentCell().autofocusWidget()
+      this.state.activeCell()?.autofocusWidget()
     ) {
       this.navigationController.navigateUp();
       return;
     }
 
-    this.currentCellNavigationController()?.navigatePrevious();
+    this.activeCellNavigationController()?.navigatePrevious();
   }
 }

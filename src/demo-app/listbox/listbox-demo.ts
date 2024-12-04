@@ -24,7 +24,7 @@ export default class ListboxDemo {
   selectionMode = computed(() => Number(this.selectionModeStr()));
   skipDisabled = true;
   multiselection = false;
-  currentIndex = 0;
+  activeIndex = 0;
   typeaheadDelay = 600;
   selectedIndices = [0];
   typeaheadMatcher = /@/;

@@ -9,14 +9,14 @@ export interface TypeAheadInputs<T extends TypeAheadItemInputs> {
   readonly items: Signal<T[]>;
   readonly delay: Signal<number>;
   readonly matcher: Signal<RegExp>;
-  readonly currentIndex: WritableSignal<number>;
+  readonly activeIndex: WritableSignal<number>;
 }
 
 export class TypeAheadState<T extends TypeAheadItemInputs> {
   readonly items: Signal<T[]>;
   readonly delay: Signal<number>;
   readonly matcher: Signal<RegExp>;
-  readonly currentIndex: WritableSignal<number>;
+  readonly activeIndex: WritableSignal<number>;
   readonly query = signal('');
 
   private controller?: TypeaheadController<T>;
@@ -25,7 +25,7 @@ export class TypeAheadState<T extends TypeAheadItemInputs> {
     this.items = inputs.items;
     this.delay = inputs.delay;
     this.matcher = inputs.matcher;
-    this.currentIndex = inputs.currentIndex;
+    this.activeIndex = inputs.activeIndex;
   }
 
   async getController() {

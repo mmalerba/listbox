@@ -3,14 +3,17 @@
   <li tab #two="tab">Two</li>
   <li tab #three="tab">Three</li>
 </ul>
-<div tabpanel [for]="tablist.currentTab()">
-  @if (tablist.currentTab() === one.state) {
-    <div>Content One</div>
-  }
-  @if (tablist.currentTab() === two.state) {
-    <div>Content Two</div>
-  }
-  @if (tablist.currentTab() === three.state) {
-    <div>Content Three <a href="/tabs" tabindex="0">link</a></div>
-  }
-</div>
+@let activeTab = tablist.activeTab();
+@if (activeTab !== undefined) {
+  <div tabpanel [for]="activeTab">
+    @if (tablist.activeTab() === one.state) {
+      <div>Content One</div>
+    }
+    @if (tablist.activeTab() === two.state) {
+      <div>Content Two</div>
+    }
+    @if (tablist.activeTab() === three.state) {
+      <div>Content Three <a href="/tabs" tabindex="0">link</a></div>
+    }
+  </div>
+}

@@ -1,4 +1,4 @@
-import { computed, Signal, WritableSignal } from '@angular/core';
+import { Signal, WritableSignal } from '@angular/core';
 import type { ListNavigationController } from './list-navigation-controller';
 
 export interface ListNavigationItemInputs {
@@ -10,16 +10,14 @@ export interface ListNavigationInputs<T extends ListNavigationItemInputs> {
   readonly wrap: Signal<boolean>;
   readonly items: Signal<T[]>;
   readonly skipDisabled: Signal<boolean>;
-  readonly currentIndex: WritableSignal<number>;
+  readonly activeIndex: WritableSignal<number>;
 }
 
 export class ListNavigationState<T extends ListNavigationItemInputs> {
   readonly wrap: Signal<boolean>;
   readonly items: Signal<T[]>;
   readonly skipDisabled: Signal<boolean>;
-  readonly currentIndex: WritableSignal<number>;
-
-  readonly currentItem = computed(() => this.items()[this.currentIndex()]);
+  readonly activeIndex: WritableSignal<number>;
 
   private controller?: ListNavigationController<T>;
 
@@ -27,7 +25,7 @@ export class ListNavigationState<T extends ListNavigationItemInputs> {
     this.wrap = inputs.wrap;
     this.items = inputs.items;
     this.skipDisabled = inputs.skipDisabled;
-    this.currentIndex = inputs.currentIndex;
+    this.activeIndex = inputs.activeIndex;
   }
 
   async getController() {

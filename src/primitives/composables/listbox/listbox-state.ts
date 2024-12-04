@@ -1,22 +1,26 @@
 import { Signal, WritableSignal } from '@angular/core';
-import { FocusInputs, FocusState } from '../focus/focus-state';
-import {
-  ListNavigationInputs,
-  ListNavigationState,
-} from '../navigation/list-navigation-state';
-import { SelectionInputs, SelectionState } from '../selection/selection-state';
-import { TypeAheadInputs, TypeAheadState } from '../typeahead/typeahead-state';
+import { FocusState } from '../focus/focus-state';
+import { ListNavigationState } from '../navigation/list-navigation-state';
+import { SelectionState } from '../selection/selection-state';
+import { TypeAheadState } from '../typeahead/typeahead-state';
 import type { Orientation } from '../types';
 import { ListboxController, ListboxSelectionMode } from './listbox-controller';
 import { OptionState } from './option-state';
 
 export type ListboxInputs<T extends OptionState> = {
-  orientation: Signal<Orientation>;
-  selectionMode: Signal<ListboxSelectionMode>;
-} & ListNavigationInputs<T> &
-  TypeAheadInputs<T> &
-  SelectionInputs<T> &
-  FocusInputs<T>;
+  readonly element: HTMLElement;
+  readonly items: Signal<T[]>;
+  readonly activeIndex: WritableSignal<number>;
+  readonly rovingFocus: Signal<boolean>;
+  readonly multiselection: Signal<boolean>;
+  readonly skipDisabled: Signal<boolean>;
+  readonly wrap: Signal<boolean>;
+  readonly delay: Signal<number>;
+  readonly matcher: Signal<RegExp>;
+  readonly selectedIndices: WritableSignal<number[]>;
+  readonly orientation: Signal<Orientation>;
+  readonly selectionMode: Signal<ListboxSelectionMode>;
+};
 
 export class ListboxState<T extends OptionState> {
   readonly focusState: FocusState<T>;
@@ -30,7 +34,8 @@ export class ListboxState<T extends OptionState> {
   readonly orientation: Signal<Orientation>;
   readonly items: Signal<T[]>;
   readonly selectionMode: Signal<ListboxSelectionMode>;
-  readonly currentIndex: WritableSignal<number>;
+  readonly activeIndex: WritableSignal<number>;
+  readonly rovingFocus: Signal<boolean>;
 
   private controller?: ListboxController<T> | null = null;
 
@@ -44,9 +49,10 @@ export class ListboxState<T extends OptionState> {
     this.tabindex = this.focusState.tabindex;
     this.multiselection = inputs.multiselection;
     this.activedescendant = this.focusState.activedescendant;
-    this.currentIndex = inputs.currentIndex;
+    this.activeIndex = inputs.activeIndex;
     this.items = inputs.items;
     this.selectionMode = inputs.selectionMode;
+    this.rovingFocus = inputs.rovingFocus;
   }
 
   async getController() {

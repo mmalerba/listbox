@@ -20,10 +20,12 @@ export class TabState {
       .items()
       .findIndex((item) => item.id() === this.id()),
   );
-  readonly focused = computed(
-    () => this.tablist.focusState.focusIndex() === this.index(),
+  readonly active = computed(
+    () => this.tablist.focusState.activeIndex() === this.index(),
   );
-  readonly tabindex = computed(() => (this.focused() ? 0 : -1));
+  readonly tabindex = computed(() =>
+    this.tablist.rovingFocus() && this.active() ? 0 : -1,
+  );
 
   constructor(inputs: TabInputs) {
     this.element = inputs.element;

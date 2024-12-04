@@ -14,7 +14,7 @@ export interface GridInputs<T extends GridCellState> {
   readonly wrap: Signal<boolean>;
   readonly cells: Signal<T[][]>;
   readonly skipDisabled: Signal<boolean>;
-  readonly currentGridCoordinate: WritableSignal<GridCoordinate>;
+  readonly activeGridCoordinate: WritableSignal<GridCoordinate>;
   readonly rovingFocus: Signal<boolean>;
 }
 
@@ -23,16 +23,14 @@ export class GridState<T extends GridCellState> {
   readonly rovingFocus: Signal<boolean>;
   readonly cells: Signal<T[][]>;
   readonly skipDisabled: Signal<boolean>;
-  readonly currentGridCoordinate: WritableSignal<GridCoordinate>;
-  readonly currentCell: Signal<T>;
-  readonly focusedCell: Signal<T | undefined>;
+  readonly activeGridCoordinate: WritableSignal<GridCoordinate>;
   readonly activeCell: Signal<T | undefined>;
   readonly items: Signal<T[]>;
-  readonly currentIndex: WritableSignal<number>;
+  readonly activeIndex: WritableSignal<number>;
 
   readonly tabindex: Signal<number>;
 
-  readonly inWidgetMode = computed(() => !!this.currentCell()?.inWidgetMode());
+  readonly inWidgetMode = computed(() => !!this.activeCell()?.inWidgetMode());
 
   readonly rowcount = computed(() => this.cells().length);
 
@@ -59,7 +57,7 @@ export class GridState<T extends GridCellState> {
     this.cells = inputs.cells;
     this.rovingFocus = inputs.rovingFocus;
     this.skipDisabled = inputs.skipDisabled;
-    this.currentGridCoordinate = inputs.currentGridCoordinate;
+    this.activeGridCoordinate = inputs.activeGridCoordinate;
 
     this.navigationState = new GridNavigationState({
       ...inputs,
@@ -67,26 +65,20 @@ export class GridState<T extends GridCellState> {
       colcount: this.colcount,
     });
 
-    this.currentCell = this.navigationState.currentCell;
+    this.activeCell = this.navigationState.activeCell;
 
     this.items = computed(() => this.cells().flat());
-    this.currentIndex = linkedSignal(() =>
-      this.items().indexOf(this.currentCell()),
+    this.activeIndex = linkedSignal(() =>
+      this.items().indexOf(this.activeCell()!),
     );
 
     this.focusState = new FocusState({
       ...inputs,
       items: this.items,
-      currentIndex: this.currentIndex,
+      activeIndex: this.activeIndex,
     });
 
     this.tabindex = this.focusState.tabindex;
-    this.focusedCell = computed(
-      () => this.items()[this.focusState.focusIndex()],
-    );
-    this.activeCell = computed(
-      () => this.items()[this.focusState.activeIndex()],
-    );
   }
 
   async getController() {

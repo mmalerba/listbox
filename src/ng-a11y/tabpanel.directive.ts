@@ -9,7 +9,6 @@ import { TabpanelState } from '../primitives/composables/tabs/tabpanel-state';
   host: {
     role: 'tabpanel',
     '[attr.tabindex]': 'state?.tabindex()',
-    '[style.display]': 'state?.shown() ? "block" : "none"',
   },
 })
 export class Tabpanel {

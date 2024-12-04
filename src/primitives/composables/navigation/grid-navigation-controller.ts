@@ -11,7 +11,7 @@ export class GridNavigationController<T extends GridNavigationCellInputs> {
   navigateTo(coordinate: GridCoordinate): void {
     const item = this.state.getCellAt(coordinate);
     if (item && !item.disabled()) {
-      this.state.currentGridCoordinate.set(coordinate);
+      this.state.activeGridCoordinate.set(coordinate);
     }
   }
 
@@ -140,9 +140,9 @@ export class GridNavigationController<T extends GridNavigationCellInputs> {
   }
 
   private navigate(navigateFn: (i: GridCoordinate) => GridCoordinate): void {
-    const prevIndex = signal(this.state.currentGridCoordinate());
-    const nextIndex = signal(this.state.currentGridCoordinate());
-    const origIndex = signal(this.state.currentGridCoordinate());
+    const prevIndex = signal(this.state.activeGridCoordinate());
+    const nextIndex = signal(this.state.activeGridCoordinate());
+    const origIndex = signal(this.state.activeGridCoordinate());
 
     const isLoop = computed(() => {
       return (
@@ -191,6 +191,6 @@ export class GridNavigationController<T extends GridNavigationCellInputs> {
       nextIndex.update(navigateFn);
     } while (shouldSkip() && !isLoop() && !isRepeat());
 
-    this.state.currentGridCoordinate.set(nextIndex());
+    this.state.activeGridCoordinate.set(nextIndex());
   }
 }

@@ -24,7 +24,9 @@ export class WidgetState {
   readonly class = computed(() => 'widget');
 
   readonly id = computed(() => `widget-${counter++}`);
-  readonly tabindex = computed(() => (this.focused() ? 0 : -1));
+  readonly tabindex = computed(() =>
+    this.grid.rovingFocus() && this.active() ? 0 : -1,
+  );
 
   readonly index = computed(() => {
     return this.cell.widgets().findIndex((w) => {
@@ -37,16 +39,6 @@ export class WidgetState {
       return (
         this.cell.autofocusWidget() ||
         this.cell.focusState.activeIndex() === this.index()
-      );
-    }
-    return false;
-  });
-
-  readonly focused = computed(() => {
-    if (this.cell.isCurrent()) {
-      return (
-        this.cell.autofocusWidget() ||
-        this.cell.focusState.focusIndex() === this.index()
       );
     }
     return false;

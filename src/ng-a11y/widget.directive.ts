@@ -27,12 +27,13 @@ export class Widget {
     let isInitialLoad = true;
     this.state = new WidgetState(this);
 
+    // TODO: use syncFocus()
     effect(() => {
-      if (this.state.focused() && !isInitialLoad) {
+      if (this.grid.rovingFocus() && this.state.active() && !isInitialLoad) {
         this.element.focus();
       }
 
-      if (this.state.active() && !isInitialLoad) {
+      if (!this.grid.rovingFocus() && this.state.active() && !isInitialLoad) {
         this.element.scrollIntoView({
           block: 'nearest',
         });

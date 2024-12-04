@@ -1,4 +1,4 @@
-import { computed, signal, Signal } from '@angular/core';
+import { signal, Signal } from '@angular/core';
 import { TabState } from './tab-state';
 import type { TabpanelController } from './tabpanel-controller';
 
@@ -8,13 +8,12 @@ export interface TabpanelInputs<T extends TabState> {
 }
 
 export class TabpanelState<T extends TabState> {
-  readonly shown = computed(() => this.inputs.tab().focused());
   readonly tabindex = signal(0);
   readonly element: HTMLElement;
 
   private controller?: TabpanelController<T>;
 
-  constructor(private inputs: TabpanelInputs<T>) {
+  constructor(inputs: TabpanelInputs<T>) {
     this.element = inputs.element;
   }
 

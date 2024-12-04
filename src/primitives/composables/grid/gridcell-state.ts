@@ -33,7 +33,9 @@ export class GridCellState {
 
   readonly id = computed(() => `gridcell-${counter++}`);
   readonly coordinate = computed(() => getIndex(this.grid.cells(), this.id()));
-  readonly tabindex = computed(() => (this.focused() ? 0 : -1));
+  readonly tabindex = computed(() =>
+    this.grid.rovingFocus() && this.active() ? 0 : -1,
+  );
 
   readonly inWidgetMode = computed(
     () => this.autofocusWidget() || this.widgetIndex() !== -1,
@@ -50,21 +52,13 @@ export class GridCellState {
   });
 
   readonly hasNavigation = computed(() => this.widgets().length > 1);
-  readonly isCurrent = computed(() => this.grid.currentCell() === this);
+  readonly isCurrent = computed(() => this.grid.activeCell() === this);
 
   readonly active = computed(() => {
     return (
       !this.autofocusWidget() &&
       this.widgetIndex() === -1 &&
       this.grid.activeCell() === this
-    );
-  });
-
-  readonly focused = computed(() => {
-    return (
-      !this.autofocusWidget() &&
-      this.widgetIndex() === -1 &&
-      this.grid.focusedCell() === this
     );
   });
 
@@ -81,14 +75,14 @@ export class GridCellState {
     this.focusState = new FocusState({
       ...inputs,
       items: this.widgets,
-      currentIndex: this.widgetIndex,
+      activeIndex: this.widgetIndex,
       rovingFocus: this.grid.rovingFocus,
     });
 
     this.navigationState = new ListNavigationState({
       ...inputs,
       items: this.widgets,
-      currentIndex: this.widgetIndex,
+      activeIndex: this.widgetIndex,
       skipDisabled: this.grid.skipDisabled,
     });
   }

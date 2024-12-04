@@ -33,7 +33,7 @@ export class Grid {
   wrap = model<boolean>(false);
   rovingFocus = model<boolean>(true);
   skipDisabled = model<boolean>(false);
-  currentGridCoordinate = model<GridCoordinate>({ row: 0, col: 0 });
+  activeGridCoordinate = model<GridCoordinate>({ row: 0, col: 0 });
 
   state: GridState<GridCellState>;
   rows = contentChildren(Row, { descendants: true });

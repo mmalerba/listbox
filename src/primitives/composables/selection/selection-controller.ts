@@ -6,7 +6,7 @@ export class SelectionController<T extends SelectionItemInputs> {
   constructor(private readonly state: SelectionState<T>) {}
 
   select() {
-    const index = this.state.currentIndex();
+    const index = this.state.activeIndex();
     if (this.state.multiselection()) {
       this.setSelection([...this.state.selectedIndices(), index]);
     } else {
@@ -16,13 +16,13 @@ export class SelectionController<T extends SelectionItemInputs> {
   }
 
   deselect() {
-    const index = this.state.currentIndex();
+    const index = this.state.activeIndex();
     this.setSelection(this.state.selectedIndices().filter((i) => i !== index));
     this.state.lastSelected.set(index);
   }
 
   toggle() {
-    this.state.selectedIndices().includes(this.state.currentIndex())
+    this.state.selectedIndices().includes(this.state.activeIndex())
       ? this.deselect()
       : this.select();
   }
@@ -46,7 +46,7 @@ export class SelectionController<T extends SelectionItemInputs> {
   }
 
   selectContiguousRange() {
-    this.selectRange(this.state.lastSelected(), this.state.currentIndex());
+    this.selectRange(this.state.lastSelected(), this.state.activeIndex());
   }
 
   selectRange(fromIndex: number, toIndex: number) {

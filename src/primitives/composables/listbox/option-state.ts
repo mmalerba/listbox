@@ -26,16 +26,15 @@ export class OptionState {
       .items()
       .findIndex((item) => item.id() === this.id()),
   );
-  readonly focused = computed(
-    () => this.listbox.focusState.focusIndex() === this.posinset(),
-  );
   readonly active = computed(
     () => this.listbox.focusState.activeIndex() === this.posinset(),
   );
   readonly selected = computed(() =>
     this.listbox.selectionState.selectedIndices().includes(this.posinset()),
   );
-  readonly tabindex = computed(() => (this.focused() ? 0 : -1));
+  readonly tabindex = computed(() =>
+    this.listbox.rovingFocus() && this.active() ? 0 : -1,
+  );
 
   constructor(inputs: OptionInputs) {
     this.element = inputs.element;

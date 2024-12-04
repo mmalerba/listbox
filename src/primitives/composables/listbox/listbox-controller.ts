@@ -176,12 +176,12 @@ export class ListboxController<T extends OptionState> {
         this.selectionController.selectContiguousRange();
       })
       .on(ModifierKey.Ctrl | ModifierKey.Shift, 'Home', () => {
-        this.selectionController.selectRange(this.state.currentIndex(), 0);
+        this.selectionController.selectRange(this.state.activeIndex(), 0);
         this.navigationController.navigateFirst();
       })
       .on(ModifierKey.Ctrl | ModifierKey.Shift, 'End', () => {
         this.selectionController.selectRange(
-          this.state.currentIndex(),
+          this.state.activeIndex(),
           this.state.items().length - 1,
         );
         this.navigationController.navigateLast();
@@ -250,12 +250,12 @@ export class ListboxController<T extends OptionState> {
         this.selectionController.selectContiguousRange();
       })
       .on(ModifierKey.Ctrl | ModifierKey.Shift, 'Home', () => {
-        this.selectionController.selectRange(this.state.currentIndex(), 0);
+        this.selectionController.selectRange(this.state.activeIndex(), 0);
         this.navigationController.navigateFirst();
       })
       .on(ModifierKey.Ctrl | ModifierKey.Shift, 'End', () => {
         this.selectionController.selectRange(
-          this.state.currentIndex(),
+          this.state.activeIndex(),
           this.state.items().length - 1,
         );
         this.navigationController.navigateLast();

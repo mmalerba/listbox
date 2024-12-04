@@ -8,17 +8,18 @@ export interface TablistInputs<T extends TabState> {
   readonly element: HTMLElement;
   readonly items: Signal<T[]>;
   readonly rovingFocus: Signal<boolean>;
-  readonly currentIndex: WritableSignal<number>;
+  readonly activeIndex: WritableSignal<number>;
 }
 
 export class TablistState<T extends TabState> {
   readonly focusState: FocusState<T>;
   readonly navigationState: ListNavigationState<T>;
   readonly items: Signal<T[]>;
+  readonly rovingFocus: Signal<boolean>;
 
   readonly tabindex = computed(() => this.focusState.tabindex());
-  readonly currentTab = computed(
-    () => this.items()[this.focusState.focusIndex()],
+  readonly activeTab = computed(() =>
+    this.items().at(this.focusState.activeIndex()),
   );
 
   private controller?: TablistController<T>;
@@ -32,6 +33,7 @@ export class TablistState<T extends TabState> {
     });
 
     this.items = inputs.items;
+    this.rovingFocus = inputs.rovingFocus;
   }
 
   async getController() {

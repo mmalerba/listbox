@@ -45,7 +45,7 @@ export class Listbox {
   readonly delay = this.typeaheadDelay;
   readonly matcher = this.typeaheadMatcher;
 
-  readonly currentIndex = model.required<number>();
+  readonly activeIndex = model.required<number>();
   readonly selectedIndices = model.required<number[]>();
 
   readonly children = contentChildren(Option);

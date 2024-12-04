@@ -15,8 +15,8 @@ export class TypeaheadController<T extends TypeAheadItemInputs> {
     this.state.query.update((str) => str + char.toLowerCase());
     const startIndex =
       this.state.query().length === 1
-        ? this.state.currentIndex() + 1
-        : this.state.currentIndex();
+        ? this.state.activeIndex() + 1
+        : this.state.activeIndex();
     const index = findIndexFrom(
       this.state.items(),
       (i) => i.searchTerm().toLowerCase().startsWith(this.state.query()),
@@ -24,7 +24,7 @@ export class TypeaheadController<T extends TypeAheadItemInputs> {
     );
 
     if (index !== -1) {
-      this.state.currentIndex.set(index);
+      this.state.activeIndex.set(index);
     }
 
     this.timeout = setTimeout(() => {

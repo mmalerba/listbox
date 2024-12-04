@@ -11,11 +11,11 @@ export class ListNavigationController<T extends ListNavigationItemInputs> {
   }
 
   navigatePrevious() {
-    this.navigate(this.state.currentIndex(), this.getPreviousIndex);
+    this.navigate(this.state.activeIndex(), this.getPreviousIndex);
   }
 
   navigateNext() {
-    this.navigate(this.state.currentIndex(), this.getNextIndex);
+    this.navigate(this.state.activeIndex(), this.getNextIndex);
   }
 
   navigateFirst() {
@@ -61,6 +61,6 @@ export class ListNavigationController<T extends ListNavigationItemInputs> {
       }
     }
 
-    this.state.currentIndex.set(index);
+    this.state.activeIndex.set(index);
   }
 }

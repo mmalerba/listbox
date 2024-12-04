@@ -15,7 +15,6 @@ import { Listbox } from './listbox.directive';
     '[attr.aria-selected]': 'composable.selected()',
     '[attr.aria-disabled]': 'composable.disabled()',
     '[class.active]': 'composable.active()',
-    '[class.focused]': 'composable.focused()',
   },
 })
 export class Option {

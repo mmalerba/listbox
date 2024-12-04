@@ -15,19 +15,19 @@ export interface GridNavigationInputs<T extends GridNavigationCellInputs> {
   readonly rowcount: Signal<number>;
   readonly colcount: Signal<number>;
   readonly skipDisabled: Signal<boolean>;
-  readonly currentGridCoordinate: WritableSignal<GridCoordinate>;
+  readonly activeGridCoordinate: WritableSignal<GridCoordinate>;
 }
 
 export class GridNavigationState<T extends GridNavigationCellInputs> {
   readonly wrap: Signal<boolean>;
   readonly cells: Signal<T[][]>;
   readonly skipDisabled: Signal<boolean>;
-  readonly currentGridCoordinate: WritableSignal<GridCoordinate>;
+  readonly activeGridCoordinate: WritableSignal<GridCoordinate>;
   readonly rowcount: Signal<number>;
   readonly colcount: Signal<number>;
 
-  readonly currentCell = computed(
-    () => this.getCellAt(this.currentGridCoordinate())!,
+  readonly activeCell = computed(() =>
+    this.getCellAt(this.activeGridCoordinate()),
   );
 
   private controller?: GridNavigationController<T>;
@@ -36,7 +36,7 @@ export class GridNavigationState<T extends GridNavigationCellInputs> {
     this.wrap = inputs.wrap;
     this.cells = inputs.cells;
     this.skipDisabled = inputs.skipDisabled;
-    this.currentGridCoordinate = inputs.currentGridCoordinate;
+    this.activeGridCoordinate = inputs.activeGridCoordinate;
     this.rowcount = inputs.rowcount;
     this.colcount = inputs.colcount;
   }
